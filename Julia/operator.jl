@@ -130,6 +130,7 @@ end
   Jz=1
   b=0;
   h=[-b/2+Jz/4 0 0 0; 0 -Jz/4 J/4 0; 0 J/4 -Jz/4 0; 0 0 0 Jz/4+b/2]
+  H=reshape(h,1,1,4,4)
   Sz=[0.5 0;0 -0.5]
   S_p=[0 1;0 0]
   S_m=[0 0;1 0]
@@ -138,7 +139,7 @@ end
   S_m=reshape(S_m,1,1,2,2)
   A2=reshape(complex([0.;1.]),1,1,2)
   A1=reshape(complex([1.;0.]),1,1,2)
-  spin=zeros(21)
+  energ=zeros(21)
   D=Array{Any}(L)
   D2=Array{Any}(L)
   for i=1:L
@@ -149,16 +150,20 @@ end
     end
   end
 for i=1:21
-  @time tMPS(D,h,0.1,0.005,30)
-  V=operator(D[6],Sz)
-  for j=1:L
-    D2[j]=D[j]
+  @time tMPS(D,h,0.1,0.005,20)
+  #for j=1:L
+  #  D2[j]=D[j]
+  #end
+  for k=1:L-1
+    D2[k]=operator(D[k],H)
   end
-  D2[6]=V
-  spin[i]=real((overlap(D2,D)/overlap(D,D))[1])
+  #V=operator(D[6],Sz)
+  D2[L]=D[L]
+  #D2[6]=V
+  energ[i]=real((overlap(D2,D)/overlap(D,D))[1])
   println(i)
 end
-print(spin)
+print(energ)
 x=linspace(0,2,21)
-plot(x,spin)
+plot(x,energ)
 gui()
