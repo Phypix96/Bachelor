@@ -1,5 +1,5 @@
 include("compress.jl")
-using Plots
+#using Plots
 ################################################################################
 ################################################################################
 #tMPS
@@ -28,6 +28,20 @@ function tMPS(C,h,t,Δt::Float64,D::Int64=Inf)
         compress(C,D,direction="R")
         compress(C,D,direction="L")
     end
+end
+
+function operator_en(C,h,D::Int64=Inf)
+  C2=Array{Any}(size(C)[1])
+  d=size(C[1])[3];
+  Op=complex(h)
+  for j=1:size(C)[1]-1
+    (A,B)=operator_2bond(C[j],C[j+1],Op);
+    C2[j]=A
+    C2[j+1]=B
+  end
+  compress(C2,D,direction="R")
+  compress(C2,D,direction="L")
+  return C2
 end
 
 function operator_2bond(A::Array{Complex128},B::Array{Complex128}, Op::Array{Complex128})
@@ -83,7 +97,6 @@ end
 function operator(A::Array{Complex128},H)
   (A1,A2,d)=size(A)
   (B1,B2)=size(H)[1:2]
-
   N=complex(zeros(B1*A1,B2*A2,d))
   for a1=1:A1
     for b1=1:B1
@@ -142,6 +155,21 @@ end
   energ=zeros(21)
   D=Array{Any}(L)
   D2=Array{Any}(L)
+  W1=zeros(1,5,2,2)
+  W2=zeros(5,1,2,2)
+  W=zeros(5,5,2,2)
+  W[1,1,:,:]=eye(2,2)
+  W[2,1,:,:]=S_p
+  W[3,1,:,:]=S_m
+  W[4,1,:,:]=Sz
+  W[5,2,:,:]=J/2*S_m
+  W[5,3,:,:]=J/2*S_p
+  W[5,4,:,:]=Jz*Sz
+  W[5,5,:,:]=eye(2,2)
+  W1[:,:,:,:]=W[:,5,:,:]
+  W2[:,:,:,:]=W[1,:,:,:]
+  H=Any[W1,W,W,W,W,W,W,W,W,W,W2]
+
   for i=1:L
     if i%2==1
       D[i]=A1
@@ -151,19 +179,18 @@ end
   end
 for i=1:21
   @time tMPS(D,h,0.1,0.005,20)
-  #for j=1:L
-  #  D2[j]=D[j]
-  #end
-  for k=1:L-1
-    D2[k]=operator(D[k],H)
+  for j=1:L
+    D2[j]=operator(D[j],H[j])
   end
+  #D2=operator_en(D,h,20)
   #V=operator(D[6],Sz)
-  D2[L]=D[L]
+  compress(D2,20,direction="L")
+  compress(D2,20,direction="R")
   #D2[6]=V
   energ[i]=real((overlap(D2,D)/overlap(D,D))[1])
   println(i)
 end
 print(energ)
-x=linspace(0,2,21)
-plot(x,energ)
-gui()
+#x=linspace(0,2,21)
+#plot(x,energ)
+#gui()
