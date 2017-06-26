@@ -1,5 +1,3 @@
-using Gallium
-
 function compress(C, D::Int64=Inf; direction="R")
   L=size(C)[1];
   if direction=="L"
@@ -96,14 +94,13 @@ function right_norm(B::Array{Complex128}, M::Array{Complex128}, D::Int64=Inf)
   M2=complex(zeros(D3,D_is,d))
   for σ = 1:d
     for i=1:D_is j = 1:D2
-      B2[i,j,σ]=V[σ*D2+j-D2,i]; #splitting V^†-maticies at [i,σ*D2+j-D2] into B-matricies again
+      B2[i,j,σ] = conj(V[σ*D2+j-D2,i]); #splitting V^†-maticies at [i,σ*D2+j-D2] into B-matricies again
     end
     for i=1:D3, j=1:D4
       for k=1:D_is
-        M2[i,k,σ]+=M[i,j,σ]*U[j,k]*S[k]; #new matrix left of the compressed
+        M2[i,k,σ] += M[i,j,σ]*U[j,k]*S[k]; #new matrix left of the compressed
       end
     end
-    #[:,1:D_is,σ]=*(M[:,:,σ],U[:,1:D_is],diagm(S[1:D_is])); #new matrix left of the compressed
   end
   return (B2,M2)
 end
@@ -114,16 +111,14 @@ function right_norm(B::Array{Complex128}, D::Int64=Inf)
   for j = 1:D2 σ =1:d
     H[:,σ*D2+j-D2]=B[:,j,σ];
   end
-  (U,S,V)=svd(H);
+  F=svdfact(H);
 
-  D_is=Int64(min(D,size(S)[1]))  #if size has to be truncated, match the matrix dimensions
+  D_is=Int64(min(D,size(F[:S])[1]))  #if size has to be truncated, match the matrix dimensions
+  B2=complex(zeros(D_is,D2,d))
   for σ = 1:d
     for i=1:D_is j = 1:D2
-      B[i,j,σ]=V[σ*D2+j-D2,i]; #splitting V^†-maticies at [i,σ*D2+j-D2] into B-matricies again
+      B2[i,j,σ]=F[:Vt][i,σ*D2+j-D2]; #splitting V^†-maticies at [i,σ*D2+j-D2] into B-matricies again
     end
   end
-  B=B[1:D_is,:,:]
-
-  return (B)
+  return (B2)
 end
-#breakpoint(left_norm)
