@@ -6,21 +6,21 @@ function tMPS(C,h,t,Δt::Float64,D::Int64=Inf)
     Op_1=expm(-im*h*Δt/2.)
     Op_2=expm(-im*h*Δt)
 
-    for j=1:div(size(C)[1]-1,2)
+    for j=1:ceil(Int64,(size(C)[1]-1)/2)
       (A,B)=operator_2bond(C[2*j-1],C[2*j],Op_1);
       C[2*j-1]=A
       C[2*j]=B
     end
 
     for i=1:N-1
-        for j=1:div(size(C)[1]-1,2)
+        for j=1:floor(Int64,(size(C)[1]-1)/2)
           (A,B)=operator_2bond(C[2*j],C[2*j+1],Op_2);
           C[2*j]=A
           C[2*j+1]=B
         end
         compress(C,D,direction="R")
         compress(C,D,direction="L")
-        for j=1:div(size(C)[1]-1,2)
+        for j=1:ceil(Int64,(size(C)[1]-1)/2)
           (A,B)=operator_2bond(C[2*j-1],C[2*j],Op_2);
           C[2*j-1]=A
           C[2*j]=B
@@ -28,12 +28,12 @@ function tMPS(C,h,t,Δt::Float64,D::Int64=Inf)
 
     end
 
-    for j=1:div(size(C)[1]-1,2)
+    for j=1:floor(Int64,(size(C)[1]-1)/2)
       (A,B)=operator_2bond(C[2*j],C[2*j+1],Op_2);
       C[2*j]=A
       C[2*j+1]=B
     end
-    for j=1:div(size(C)[1]-1,2)
+    for j=1:ceil(Int64,(size(C)[1]-1)/2)
       (A,B)=operator_2bond(C[2*j-1],C[2*j],Op_1);
       C[2*j-1]=A
       C[2*j]=B

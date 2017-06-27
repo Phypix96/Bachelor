@@ -1,5 +1,5 @@
 include("compress.jl")
-using Plots
+#using Plots
 ################################################################################
 ################################################################################
 #tMPS
@@ -10,7 +10,7 @@ function tMPS(C,h,t,Δt::Float64,D::Int64=Inf)
     d=size(C[1])[3];
     Op_1=expm(-im*h*Δt/2.)
     Op_2=expm(-im*h*Δt)
-"""
+    """
     C=tMPS_step(C,Op_1,"odd")
     for i=1:N-1
       C=tMPS_step(C,Op_2,"even")
@@ -21,13 +21,13 @@ function tMPS(C,h,t,Δt::Float64,D::Int64=Inf)
     C=tMPS_step(C,Op_2,"even")
     C=tMPS_step(C,Op_1,"odd")
 
-    """
+
     for j=1:div(size(C)[1]-1,2)
       (A,B)=operator_2bond(C[2*j-1],C[2*j],Op_1);
       C[2*j-1]=A
       C[2*j]=B
     end
-
+"""
     for i=1:N-1
         for j=1:div(size(C)[1]-1,2)
           (A,B)=operator_2bond(C[2*j],C[2*j+1],Op_2);
@@ -48,32 +48,16 @@ function tMPS(C,h,t,Δt::Float64,D::Int64=Inf)
       C[2*j]=A
       C[2*j+1]=B
     end
+    """
     for j=1:div(size(C)[1]-1,2)
       (A,B)=operator_2bond(C[2*j-1],C[2*j],Op_1);
       C[2*j-1]=A
       C[2*j]=B
     end
-
+    """
     compress(C,D,direction="R")
     compress(C,D,direction="L")
-end
 
-function tMPS_step(C::Array{Any},Op,position)
-  if position=="odd"
-    for j=1:div(size(C)[1]-1,2)
-      (A,B)=operator_2bond(C[2*j-1],C[2*j],Op);
-      C[2*j-1]=A
-      C[2*j]=B
-    end
-  end
-  if position=="even"
-    for j=1:div(size(C)[1]-1,2)
-      (A,B)=operator_2bond(C[2*j],C[2*j+1],Op);
-      C[2*j]=A
-      C[2*j+1]=B
-    end
-  end
-  return C
 end
 
 function operator_en(C,h,D::Int64=Inf)
@@ -219,7 +203,7 @@ end
     end
   end
 
-for i=1:50
+for i=1:5
   for j=1:L
     D2[j]=D[j]
   end
