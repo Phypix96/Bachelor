@@ -194,9 +194,9 @@ end
 **site_OP**   tuple consisting of a MPO and the site it acts on\\
 \\
 WARNING: Only one operator can be applied per site, if muliple operators are needed,
-calculate the MPO product beforehand. CURRENTLY ONLY ONE OPERATOR WORKS!!!!
+calculate the MPO product beforehand.\\
 
-FUNCTION:*returns value of* ⟨Φ|O_i1×O_i2×...|Ψ⟩
+FUNCTION:*returns value of* ⟨Φ|O_i1×O_i2×...|Ψ⟩\\
 If a site of a MPO is identical to the current contraction-position, the MPO is
 applied, otherwise the usual contraction
 """
@@ -213,14 +213,14 @@ function overlap(Φ,Ψ,site_Op::Tuple{Array{},Int64}...)
           sum += *(Φ[i][:,:,σ]',overlap,operator(Ψ[i],site_Op[j][1])[:,:,σ])
         end
         overlap = sum
+      end
     end
 
     if !contraction
-        for σ=1:size(Ψ[1])[3]
-          sum += *(Φ[i][:,:,σ]',overlap,Ψ[i][:,:,σ])
-        end
-        overlap = sum
+      for σ=1:size(Ψ[1])[3]
+        sum += *(Φ[i][:,:,σ]',overlap,Ψ[i][:,:,σ])
       end
+      overlap = sum
     end
 
   end

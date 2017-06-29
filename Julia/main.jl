@@ -9,15 +9,15 @@ data=readtable("11.data",separator=',',header=false)
 #main
 max_dim=80
 L=11
-points=101
+points=10
 error=zeros(div(max_dim,5))
 #for dim=5:5:max_dim
 
-  dim=60
+  dim=30
 
   site=7
   D=Array{Any}(L)
-  spin=zeros(points,L)
+  spin_corr=zeros(points,L-1)
   energy=zeros(points)
 
   J=1
@@ -62,8 +62,8 @@ error=zeros(div(max_dim,5))
 
 
   for i=1:points-1
-    for j=1:L
-      spin[i,j]=real(overlap(D,D,(Sz,j))[1])
+    for j=1:L-1
+      spin_corr[i,j]=abs(overlap(D,D,(Sz,j),(Sz,j+1))[1])
     end
     energy[i]=real(overlap(D,H,D)[1])
     @time tMPS(D,h,0.1,0.1,dim)
@@ -71,8 +71,8 @@ error=zeros(div(max_dim,5))
     println(i,": ",energy[i])
   end
 
-  for j=1:L
-    spin[points,j]=real(overlap(D,D,(Sz,j))[1])
+  for j=1:L-1
+    spin_corr[points,j]=real(overlap(D,D,(Sz,j),(Sz,j+1))[1])
   end
   energy[points]=real(overlap(D,H,D)[1])
 #print(energy)
