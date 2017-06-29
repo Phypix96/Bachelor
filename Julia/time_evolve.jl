@@ -14,7 +14,7 @@ one Trotter-step will be performed with time Δt. D will be set to inf if not sp
 FUNCTION: *changes the entries of C to compressed matrices, that are time-evolved by h
 for a time t*\\
 A third-order Trotter decomposition (exp(-im*h_odd*Δt/2)exp(-im*h_even*Δt)exp(-im*h_odd*Δt/2)) is
-alternatly applied to the odd and even bonds of the MPS and compressed after every step. 
+alternatly applied to the odd and even bonds of the MPS and compressed after every step.
 """
 function tMPS(C, h, t::Float64, Δt::Float64, D::Int64=Inf)
     N=floor(t/Δt);
