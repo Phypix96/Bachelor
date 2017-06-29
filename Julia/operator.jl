@@ -1,5 +1,6 @@
 include("compress.jl")
 using Plots
+using Gallium
 ################################################################################
 ################################################################################
 #tMPS
@@ -10,18 +11,7 @@ function tMPS(C,h,t,Δt::Float64,D::Int64=Inf)
     d=size(C[1])[3];
     Op_1=expm(-im*h*Δt/2.)
     Op_2=expm(-im*h*Δt)
-"""
-    C=tMPS_step(C,Op_1,"odd")
-    for i=1:N-1
-      C=tMPS_step(C,Op_2,"even")
-      C=tMPS_step(C,Op_2,"odd")
-      compress(C,D,direction="R")
-      compress(C,D,direction="L")
-    end
-    C=tMPS_step(C,Op_2,"even")
-    C=tMPS_step(C,Op_1,"odd")
 
-    """
     for j=1:div(size(C)[1]-1,2)
       (A,B)=operator_2bond(C[2*j-1],C[2*j],Op_1);
       C[2*j-1]=A
@@ -34,13 +24,14 @@ function tMPS(C,h,t,Δt::Float64,D::Int64=Inf)
           C[2*j]=A
           C[2*j+1]=B
         end
+        compress(C,D,direction="R")
+        compress(C,D,direction="L")
         for j=1:div(size(C)[1]-1,2)
           (A,B)=operator_2bond(C[2*j-1],C[2*j],Op_2);
           C[2*j-1]=A
           C[2*j]=B
         end
-        compress(C,D,direction="R")
-        compress(C,D,direction="L")
+
     end
 
     for j=1:div(size(C)[1]-1,2)
@@ -56,24 +47,7 @@ function tMPS(C,h,t,Δt::Float64,D::Int64=Inf)
 
     compress(C,D,direction="R")
     compress(C,D,direction="L")
-end
 
-function tMPS_step(C::Array{Any},Op,position)
-  if position=="odd"
-    for j=1:div(size(C)[1]-1,2)
-      (A,B)=operator_2bond(C[2*j-1],C[2*j],Op);
-      C[2*j-1]=A
-      C[2*j]=B
-    end
-  end
-  if position=="even"
-    for j=1:div(size(C)[1]-1,2)
-      (A,B)=operator_2bond(C[2*j],C[2*j+1],Op);
-      C[2*j]=A
-      C[2*j+1]=B
-    end
-  end
-  return C
 end
 
 function operator_en(C,h,D::Int64=Inf)
@@ -105,9 +79,18 @@ function operator_2bond(A::Array{Complex128},B::Array{Complex128}, Op::Array{Com
         end
       end
     end
+
     F=svdfact(P);
-    U1=*(F[:U],diagm(sqrt(F[:S])));
-    U2=*(diagm(sqrt(F[:S])),F[:Vt]);
+
+    U1=complex(zeros(d^2,d^2))
+    U2=complex(zeros(d^2,d^2))
+    for i=1:d^2, j=1:d^2
+      U1[i,j]=F[:U][i,j]*sqrt(F[:S][j])
+      U2[i,j]=sqrt(F[:S][i])*F[:Vt][i,j]
+    end
+    #U1= *(F[:U],diagm(sqrt(F[:S])));
+    #U2= *(diagm(sqrt(F[:S])),F[:Vt]);
+
     for σ=1:d
       for i=1:D1
         for j=1:D2
@@ -130,10 +113,6 @@ function operator_2bond(A::Array{Complex128},B::Array{Complex128}, Op::Array{Com
         end
       end
     end
-    #U1=reshape(U1,1,d^2,d,d)
-    #U2=reshape(U2,d^2,1,d,d)
-    #N12=operator(A,U1)
-    #N22=operator(B,U2)
     A=N1;
     B=N2;
     return (A,B)
@@ -181,7 +160,7 @@ end
   J=1
   Jz=1
   b=0;
-  h=[-b/2+Jz/4 0 0 0; 0 -Jz/4 J/4 0; 0 J/4 -Jz/4 0; 0 0 0 Jz/4+b/2]
+  h=[-b/2+Jz/4 0 0 0; 0 -Jz/4 J/2 0; 0 J/2 -Jz/4 0; 0 0 0 Jz/4+b/2]
   H=reshape(h,1,1,4,4)
   Sz=[0.5 0;0 -0.5]
   S_p=[0 1;0 0]
@@ -191,7 +170,7 @@ end
   S_m=reshape(S_m,1,1,2,2)
   A2=reshape(complex([0.;1.]),1,1,2)
   A1=reshape(complex([1.;0.]),1,1,2)
-  spin=zeros(51)
+  spin=zeros(31)
   energ=zeros(51)
   site=1
   D=Array{Any}(L)
@@ -219,7 +198,7 @@ end
     end
   end
 
-for i=1:50
+for i=1:30
   for j=1:L
     D2[j]=D[j]
   end
@@ -227,7 +206,8 @@ for i=1:50
   #compress(D2,dim,direction="R")
   #compress(D2,dim,direction="L")
   spin[i]=real((overlap(D2,D)/overlap(D,D))[1])
-  @time tMPS(D,h,0.2,0.1,dim)
+
+  @time tMPS(D,h,0.2,0.2,dim)
 
   #for j=1:L
   #  D2[j]=operator(D[j],H[j])
@@ -248,10 +228,10 @@ end
 D2[site]=operator(D[site],Sz)
 #compress(D2,dim,direction="R")
 #compress(D2,dim,direction="L")
-spin[51]=real((overlap(D2,D)/overlap(D,D))[1])
+spin[31]=real((overlap(D2,D)/overlap(D,D))[1])
 print(spin)
-x=linspace(0,3,51)
-#plot(x,spin)
+x=linspace(0,3,31)
+plot(x,spin)
 
 #Site 1
 #t=1,Δt=0.1
