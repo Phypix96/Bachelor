@@ -1,34 +1,34 @@
 """
-  **compress(C, D::Int64=Inf; direction="R")**
+  **compress(C, D::Int64=Inf; direction=:R)**
 
 **C**   of Type Array{Any}, every element contains the set of d Matrices for one site\\
 **D**   maximum dimension of the Matrices in C, bigger oes will be truncated by a SVD\\
 **direction** determines if the Matrices are compressed from left to right (="L") or from
-right to left (="R")\\
+right to left (=:R)\\
   \\
 The compressed Array C is normalised, as after the last SVD the scalar U*S (or S*V†
 respectively) are ignored.\\
 \\
 FUNCTION: *Changes the entries of C to normalised, truncated matrices*
 Starting at one end of the MPS, the first matrix is subjected to a SVD. Considering
-direction="L", the new matrix is U, while the next matrix in line is multiplied by
+direction=:L, the new matrix is U, while the next matrix in line is multiplied by
 SV† and then in turn subjected to a SVD and so on. For the last matrix, SV† is a scalar, that
 is ignored to maintain normalisation. If the columnlength of U or V is greater than D,
 the matrices are truncated by shrinking the matrices to the first D columns.
 """
-function compress(C, D::Int64=Inf; direction="R")
+function compress(C, D::Int64=Inf, direction=:R)
   L=size(C)[1];
-  if direction=="L"
+  if direction==:L
     for i=1:L-1
       (C[i],C[i+1])=left_norm(C[i], C[i+1], D);
     end
     C[L]=left_norm(C[L]) #last step normalises C
 
-  elseif direction=="R"
+  elseif direction==:R
     for i=0:L-2
       (C[L-i],C[L-i-1])=right_norm(C[L-i], C[L-i-1], D);
     end
-    C[1]=right_norm(C[1]) #last step normalises C
+  C[1]=right_norm(C[1]) #last step normalises C
   end
 end
 
@@ -65,7 +65,7 @@ function left_norm(A::Array{Complex128}, M::Array{Complex128}, D::Int64=Inf)
     end
     for i=1:D3, j=1:D4
       for k=1:D_is
-        M2[k,j,σ]+=S[k]*V'[k,i]*M[i,j,σ]; #new matrix left of the compressed
+        M2[k,j,σ]+=S[k]*conj(V[i,k])*M[i,j,σ]; #new matrix left of the compressed
       end
     end
   end
