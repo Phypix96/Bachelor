@@ -17,7 +17,7 @@ for a time t*\\
 A third-order Trotter decomposition (exp(-im*h_odd*Δt/2)exp(-im*h_even*Δt)exp(-im*h_odd*Δt/2)) is
 alternatingly applied to the odd and even bonds of the MPS and compressed after every step.
 """
-function tMPS(C, h, t::Float64, Δt::Float64, D::Int64=Inf, dom=:real)
+function tMPS(C, h::Array{Float64,2}, t::Float64, Δt::Float64, D::Int64=Inf, dom=:real)
     N=div(t,Δt);
     d=size(C[1])[3];
 
@@ -52,6 +52,100 @@ function tMPS(C, h, t::Float64, Δt::Float64, D::Int64=Inf, dom=:real)
     end
     for j=1:L_uneven
       (C[2*j-1],C[2*j])=operator_2bond(C[2*j-1],C[2*j],Op_1);
+    end
+    compress(C,D,:R)
+    compress(C,D,:L)
+
+end
+
+function tMPS(C, h::Vector{Array{Float64,2}}, t::Float64, Δt::Float64, D::Int64=Inf, dom=:real)
+    N=div(t,Δt);
+    d=size(C[1])[3];
+    L=size(C)[1]
+
+    if dom==:real
+      Op_1=expm(-im*h[2]*Δt/2.)
+      Op_2=expm(-im*h[2]*Δt)
+
+      Op_1_1=expm(-im*h[1]*Δt/2.)
+
+      Op_1_l=expm(-im*h[3]*Δt/2.)
+      Op_2_l=expm(-im*h[3]*Δt)
+    elseif dom==:imag
+      Op_1=complex(expm(-h[2]*Δt/2.))
+      Op_2=complex(expm(-h[2]*Δt))
+
+      Op_1_1=complex(expm(-h[1]*Δt/2.))
+
+      Op_1_l=complex(expm(-h[3]*Δt/2.))
+      Op_2_l=complex(expm(-h[3]*Δt))
+    end
+
+    L_uneven = ceil(Int64,(L-1)/2) #amount of uneven bonds
+    L_even = floor(Int64,(L-1)/2)  #amout of even bonds
+
+    (C[1],C[2])=operator_2bond(C[1],C[2],Op_1_1);
+    if L==L_uneven
+      (C[2*L_uneven-1],C[2*L_uneven])=operator_2bond(C[2*L_uneven-1],C[2*L_uneven],Op_1_l);
+      for j=2:L_uneven-1
+        (C[2*j-1],C[2*j])=operator_2bond(C[2*j-1],C[2*j],Op_1);
+      end
+    else
+      for j=2:L_uneven
+        (C[2*j-1],C[2*j])=operator_2bond(C[2*j-1],C[2*j],Op_1);
+      end
+    end
+
+    #as Op_1 commutes with itself, if N>1 two consecutive steps with Op_1 can be combined
+    for i=1:N-1
+      if L==L_even
+        (C[2*L_even],C[2*L_even+1])=operator_2bond(C[2*L_even],C[2*L_even+1],Op_2_l);
+        for j=1:L_even-1
+          (C[2*j],C[2*j+1])=operator_2bond(C[2*j],C[2*j+1],Op_2);
+        end
+      else
+        for j=1:L_even
+          (C[2*j],C[2*j+1])=operator_2bond(C[2*j],C[2*j+1],Op_2);
+        end
+      end
+
+      compress(C,D,:R)
+      compress(C,D,:L)
+
+      (C[1],C[2])=operator_2bond(C[1],C[2],Op_1_1);
+      if L==L_uneven
+        (C[2*L_uneven-1],C[2*L_uneven])=operator_2bond(C[2*L_uneven-1],C[2*L_uneven],Op_1_l);
+        for j=2:L_uneven-1
+          (C[2*j-1],C[2*j])=operator_2bond(C[2*j-1],C[2*j],Op_2);
+        end
+      else
+        for j=2:L_uneven
+          (C[2*j-1],C[2*j])=operator_2bond(C[2*j-1],C[2*j],Op_2);
+        end
+      end
+    end
+
+    if L==L_even
+      (C[2*L_even],C[2*L_even+1])=operator_2bond(C[2*L_even],C[2*L_even+1],Op_2_l);
+      for j=1:L_even-1
+        (C[2*j],C[2*j+1])=operator_2bond(C[2*j],C[2*j+1],Op_2);
+      end
+    else
+      for j=1:L_even
+        (C[2*j],C[2*j+1])=operator_2bond(C[2*j],C[2*j+1],Op_2);
+      end
+    end
+
+    (C[1],C[2])=operator_2bond(C[1],C[2],Op_1_1);
+    if L==L_uneven
+      (C[2*L_uneven-1],C[2*L_uneven])=operator_2bond(C[2*L_uneven-1],C[2*L_uneven],Op_1_l);
+      for j=2:L_uneven-1
+        (C[2*j-1],C[2*j])=operator_2bond(C[2*j-1],C[2*j],Op_1);
+      end
+    else
+      for j=2:L_uneven
+        (C[2*j-1],C[2*j])=operator_2bond(C[2*j-1],C[2*j],Op_1);
+      end
     end
     compress(C,D,:R)
     compress(C,D,:L)
