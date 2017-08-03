@@ -1,3 +1,5 @@
+using NMF
+
 """
   **compress(C, D::Int64=Inf; direction=:R)**
 
@@ -16,19 +18,27 @@ SV† and then in turn subjected to a SVD and so on. For the last matrix, SV† 
 is ignored to maintain normalisation. If the columnlength of U or V is greater than D,
 the matrices are truncated by shrinking the matrices to the first D columns.
 """
-function compress(C, D::Int64=Inf, direction=:R)
+function compress(C, D::Int64=Inf, direction=:R; stochastic=false)
   L=size(C)[1];
   if direction==:L
     for i=1:L-1
       (C[i],C[i+1])=left_norm(C[i], C[i+1], D);
     end
-    C[L]=left_norm(C[L]) #last step normalises C
+    if stochastic
+      C[L]=C[L]/maximum(C[L])
+    else
+      C[L]=left_norm(C[L]) #last step normalises C
+    end
 
   elseif direction==:R
     for i=0:L-2
       (C[L-i],C[L-i-1])=right_norm(C[L-i], C[L-i-1], D);
     end
-  C[1]=right_norm(C[1]) #last step normalises C
+    if stochastic
+      C[1]=C[1]/maximum(C[1])
+    else
+      C[1]=right_norm(C[1]) #last step normalises C
+    end
   end
 end
 
@@ -161,4 +171,68 @@ function right_norm(B::Array{Complex128})
     end
   end
   return (B)
+end
+
+
+#########################################################
+#######################################################
+
+
+function left_norm(A::Array{Float64}, M::Array{Float64}, D::Int64=Inf)
+  (D1,D2,d)=size(A);
+  (D3,D4,d)=size(M);
+  H=zeros(D1*d, D2);
+  #grouping σ-matricies atop each other for svd
+  for i = 1:D1 j=1:D2
+    for σ =1:d
+      H[σ*D1+i-D1,j]=A[i,j,σ];
+    end
+  end
+  D_is=Int64(min(D,D1*d,D2))  #if size has to be truncated, match the matrix dimensions
+
+  r=nnmf(H,D_is)
+  (A_new,W)=(r.W,r.H);
+  M2=zeros(D_is,D4,d);
+
+  for σ = 1:d
+    for i=1:D1 j = 1:D_is
+      A[i,j,σ]=A_new[σ*D1+i-D1,j]; #splitting U-maticies at [σ*D1+i-D1,j] into A-matricies again
+    end
+    for i=1:D3, j=1:D4
+      for k=1:D_is
+        M2[k,j,σ]+=W[k,i]*M[i,j,σ]; #new matrix left of the compressed
+      end
+    end
+  end
+  return (A[:,1:D_is,:],M2)
+end
+
+
+
+
+function right_norm(B::Array{Float64}, M::Array{Float64}, D::Int64=Inf)
+  (D1,D2,d)=size(B);
+  (D3,D4,d)=size(M)
+  H=zeros(D1, D2*d);  #grouping σ-matricies next to each other for svd
+  for j = 1:D2 i=1:D1
+    for σ =1:d
+      H[i,σ*D2+j-D2]=B[i,j,σ];
+    end
+  end
+  D_is=Int64(min(D,min(D1,D2*d)))  #if size has to be truncated, match the matrix dimensions
+  r=nnmf(H,D_is)
+  (W,B_new)=(r.W,r.H);
+
+  M2=zeros(D3,D_is,d)
+  for σ = 1:d
+    for i=1:D_is j = 1:D2
+      B[i,j,σ] = B_new[i,σ*D2+j-D2]; #splitting V^†-maticies at [i,σ*D2+j-D2] into B-matricies again
+    end
+    for i=1:D3, j=1:D4
+      for k=1:D_is
+        M2[i,k,σ] += M[i,j,σ]*W[j,k]; #new matrix left of the compressed
+      end
+    end
+  end
+  return (B[1:D_is,:,:],M2)
 end
