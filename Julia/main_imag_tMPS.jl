@@ -1,7 +1,7 @@
 include("time_evolve.jl")
 using Plots
 
-L=82
+L=64
 dim=100
 
 t=1.
@@ -24,10 +24,10 @@ rand_MPS(D,2,dim)
 
 err=1.;
 i=1.;
-@time tMPS(D,h,30.,3.,dim,:imag)
+@time tMPS(D,h,20.,2.,dim,:imag)
 en_center1=(overlap(D,D,:real,(Sz,div(L,2)),(Sz,div(L,2)+1))+overlap(D,D,:real,(Sx,div(L,2)),(Sx,div(L,2)+1))+overlap(D,D,:real,(Sy,div(L,2)),(Sy,div(L,2)+1)))[1]
-while err>1e-4
-  @time tMPS(D,h,5.*i,0.5*i,dim,:imag)
+while err>1e-5
+  @time tMPS(D,h,50.*i,5.*i,dim,:imag)
   en_center2=(overlap(D,D,:real,(Sz,div(L,2)),(Sz,div(L,2)+1))+overlap(D,D,:real,(Sx,div(L,2)),(Sx,div(L,2)+1))+overlap(D,D,:real,(Sy,div(L,2)),(Sy,div(L,2)+1)))[1]
   err=abs(en_center2-en_center1);
   en_center1=en_center2;

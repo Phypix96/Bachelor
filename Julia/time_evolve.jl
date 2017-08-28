@@ -26,8 +26,8 @@ function tMPS(C, h::Array{Float64,2}, t::Float64, Δt::Float64, D::Int64=Inf, do
       Op_1=expm(-im*h*Δt/2.)
       Op_2=expm(-im*h*Δt)
     elseif dom==:imag
-      Op_1=complex(expm(h*Δt/2.))
-      Op_2=complex(expm(h*Δt))
+      Op_1=complex(expm(-h*Δt/2.))
+      Op_2=complex(expm(-h*Δt))
     end
 
     L_uneven = ceil(Int64,(size(C)[1]-1)/2) #amount of uneven bonds
@@ -66,6 +66,7 @@ function tMPS(C, h::Vector{Array{Complex128,2}}, t::Float64, Δt::Float64, D::In
     Op_1=expm(h[2]*Δt/2.)
     Op_2=expm(h[2]*Δt)
     Op_1_1=expm(h[1]*Δt/2.)
+    Op_2_1=expm(h[1]*Δt)
     Op_1_l=expm(h[3]*Δt/2.)
     Op_2_l=expm(h[3]*Δt)
 
@@ -76,7 +77,7 @@ function tMPS(C, h::Vector{Array{Complex128,2}}, t::Float64, Δt::Float64, D::In
       asym_operator_2bond(C,:even,Op_2,Op_2_l)
       compress(C,D,:R)
       compress(C,D,:L)
-      asym_operator_2bond(C,:uneven,Op_1,Op_1_1,Op_1_l)
+      asym_operator_2bond(C,:uneven,Op_2,Op_2_1,Op_2_l)
     end
     asym_operator_2bond(C,:even,Op_2,Op_2_l)
     asym_operator_2bond(C,:uneven,Op_1,Op_1_1,Op_1_l)
@@ -85,69 +86,69 @@ function tMPS(C, h::Vector{Array{Complex128,2}}, t::Float64, Δt::Float64, D::In
 
 end
 
+
+
 function tMPS(C, h::Vector{Array{Float64,2}}, t::Float64, Δt::Float64, D::Int64=Inf)
     N=div(t,Δt);
     d=size(C[1])[3];
     L=size(C)[1]
     Op_1=expm(h[2]*Δt/2.)
     Op_2=expm(h[2]*Δt)
-    Op_1_1=reshape(expm(h[1]*Δt/2.),(1,1,size(h[1])[1],size(h[1])[2]))
-    Op_1_L=reshape(expm(h[3]*Δt/2.),(1,1,size(h[3])[1],size(h[3])[2]))
-    Op_2_L=reshape(expm(h[3]*Δt),(1,1,size(h[3])[1],size(h[3])[2]))
+    Op_1_1=expm(h[1]*Δt/2.)
+    Op_2_1=expm(h[1]*Δt)
+    Op_1_l=expm(h[3]*Δt/2.)
+    Op_2_l=expm(h[3]*Δt)
 
-    asym_operator_2bond(C,:uneven,Op_1)
-    C[1]=real(operator(C[1],Op_1_1))
-    if L%2==0
-      C[L]=real(operator(C[L],Op_1_L))
-    end
+
+    asym_operator_2bond(C,:uneven,Op_1,Op_1_1,Op_1_l)
     #as Op_1 commutes with itself, if N>1 two consecutive steps with Op_1 can be combined
     for i=1:N-1
-      asym_operator_2bond(C,:even,Op_2)
-      if L%2==1
-        C[L]=real(operator(C[L],Op_2_L))
-      end
+      asym_operator_2bond(C,:even,Op_2,Op_2_l)
       compress(C,D,:L;stochastic=true)
       compress(C,D,:R;stochastic=true)
-      asym_operator_2bond(C,:uneven,Op_1)
-      C[1]=real(operator(C[1],Op_1_1))
-      if L%2==0
-        C[L]=real(operator(C[L],Op_1_L))
-      end
-    end
-    asym_operator_2bond(C,:even,Op_2)
-    if L%2==1
-      C[L]=real(operator(C[L],Op_2_L))
+      asym_operator_2bond(C,:uneven,Op_2,Op_2_1,Op_2_l)
     end
     compress(C,D,:R;stochastic=true)
     compress(C,D,:L;stochastic=true)
-
-    asym_operator_2bond(C,:uneven,Op_1)
-    C[1]=real(operator(C[1],Op_1_1))
-    if L%2==0
-      C[L]=real(operator(C[L],Op_1_L))
-    end
+    asym_operator_2bond(C,:even,Op_2,Op_2_l)
+    asym_operator_2bond(C,:uneven,Op_1,Op_1_1,Op_1_l)
     compress(C,D,:R;stochastic=true)
     compress(C,D,:L;stochastic=true)
 
 end
 
 
-function asym_operator_2bond(C,pos,Op)
+
+function asym_operator_2bond(C,pos,Op,Op_...)
   L=size(C)[1]
   L_uneven = ceil(Int64,(L-1)/2) #amount of uneven bonds
   L_even = floor(Int64,(L-1)/2)  #amout of even bonds
   if pos==:uneven
+    (C[1],C[2])=operator_2bond(C[1],C[2],Op_[1]);
+    if L%2==0
+      (C[2*L_uneven-1],C[2*L_uneven])=operator_2bond(C[2*L_uneven-1],C[2*L_uneven],Op_[2]);
+      for j=2:L_uneven-1
+        (C[2*j-1],C[2*j])=operator_2bond(C[2*j-1],C[2*j],Op);
+      end
+    else
       for j=2:L_uneven
         (C[2*j-1],C[2*j])=operator_2bond(C[2*j-1],C[2*j],Op);
       end
+    end
+
   elseif pos==:even
+    if L%2==1
+      (C[2*L_even],C[2*L_even+1])=operator_2bond(C[2*L_even],C[2*L_even+1],Op_[1]);
+      for j=1:L_even-1
+        (C[2*j],C[2*j+1])=operator_2bond(C[2*j],C[2*j+1],Op);
+      end
+    else
       for j=1:L_even
         (C[2*j],C[2*j+1])=operator_2bond(C[2*j],C[2*j+1],Op);
       end
+    end
   end
 end
-
-
 
 """
   **operator_2bond(A::Array{Complex128},B::Array{Complex128}, Op::Array{Complex128})**
@@ -177,7 +178,6 @@ function operator_2bond(A::Array{Complex128},B::Array{Complex128}, Op::Array{Com
         end
       end
     end
-
     F=svdfact(P);
 
     U1=complex(zeros(d^2,d^2))
@@ -188,21 +188,15 @@ function operator_2bond(A::Array{Complex128},B::Array{Complex128}, Op::Array{Com
     end
 
     for σ=1:d
-      for i=1:D1
-        for j=1:D2
-          for k=1:d^2
-            for σi=1:d
+      for k=1:d^2
+        for σi=1:d
+          for i=1:D1
+            for j=1:D2
               N1[i,k*D2+j-D2,σ] += U1[σ*d+σi-d,k]*A[i,j,σi];
             end
           end
-        end
-      end
-    end
-    for σ=1:d
-      for i=1:D1_B
-        for j=1:D2_B
-          for k=1:d^2
-            for σi=1:d
+          for i=1:D1_B
+            for j=1:D2_B
               N2[k*D1_B+i-D1_B,j,σ] += U2[k,σ*d+σi-d]*B[i,j,σi];
             end
           end
@@ -451,4 +445,43 @@ function stoc_expect_val(P::Array{Any},site_Op::Tuple{Array{},Int64}...)
     end
   end
   return abs(expect_val)
+end
+
+
+
+function tMPS_variant(C, h, t::Float64, Δt::Float64, D::Int64=Inf)
+    N=div(t,Δt);
+    d=size(C[1])[3];
+
+    Op_1=complex(expm(h[2]*Δt/2.))
+    Op_2=complex(expm(h[2]*Δt))
+    #Op_1_1=complex(expm(-h[1]*Δt/2.))
+    #Op_1_l=complex(expm(-h[3]*Δt/2.))
+    Op_2_1=reshape(complex(expm(h[1]*Δt)),(1,1,2,2))
+    Op_2_l=reshape(complex(expm(h[3]*Δt)),(1,1,2,2))
+
+    L_uneven = ceil(Int64,(size(C)[1]-1)/2) #amount of uneven bonds
+    L_even = floor(Int64,(size(C)[1]-1)/2)  #amout of even bonds
+
+
+
+    #as Op_1 commutes with itself, if N>1 two consecutive steps with Op_1 can be combined
+    for i=1:N
+      C[1]=operator(C[1],Op_2_1)
+      C[L]=operator(C[L],Op_2_l)
+      #for j=1:L_uneven
+      #  (C[2*j-1],C[2*j])=operator_2bond(C[2*j-1],C[2*j],Op_1);
+      #end
+
+      for j=1:L_even
+        (C[2*j],C[2*j+1])=operator_2bond(C[2*j],C[2*j+1],Op_2);
+      end
+
+      for j=1:L_uneven
+        (C[2*j-1],C[2*j])=operator_2bond(C[2*j-1],C[2*j],Op_2);
+      end
+      compress(C,D,:R)
+      compress(C,D,:L)
+    end
+
 end

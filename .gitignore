@@ -2,3 +2,12 @@
 Julia/Data/id_1.png
 Julia/Data/info.txt
 *.png
+*.aux
+*.log
+*.gz
+*.dvi
+Julia/Data/11.data
+plots.jl
+Julia/Data/gif_test.jl
+Julia/Data/Sz_11.data
+Julia/Data/tMPS_0.1.mp4
