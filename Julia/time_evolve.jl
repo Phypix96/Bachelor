@@ -449,6 +449,70 @@ end
 
 
 
+function entropy(C::Array{Any})
+  compress(C,20,:L)
+  L=size(C)[1]
+  entropy=zeros(L-1)
+  for i=0:(L-2)
+    B=C[L-i]
+    (D1,D2,d)=size(B);
+    H=complex(zeros(D1, D2*d));  #grouping σ-matricies next to each other for svd
+    for j = 1:D2 k=1:D1
+      for σ =1:d
+        H[k,σ*D2+j-D2]=B[k,j,σ];
+      end
+    end
+    (U,S,V)=svd(H);
+    for j=1:size(S)[1]
+      entropy[L-i-1]-=S[j]*log(S[j])
+    end
+    (C[L-i],C[L-i-1])=right_norm(C[L-i], C[L-i-1],20)
+  end
+  return minimum(entropy)
+end
+
+
+function stoc_entropy(P::Array{Any},N::Int64)
+  Id=reshape([1 0; 0 1],(1,1,2,2))
+  P=P/stoc_expect_val(P,(Id,1))[1]
+  L=size(P)[1]
+  d=size(P[1])[3]
+  entropy=zeros(L-1,N)
+  for i=0:(L-2)
+    prod_1=1
+    prod_2=1
+    p_λ=zeros(size(P[L-i])[1])
+    for j=1:L
+      sum=0.
+      for σ=1:d
+        sum+=P[j][:,:,σ]
+      end
+      if j<(L-i)
+        prod_1=*(prod_1,sum)
+      else
+        prod_2=*(prod_2,sum)
+      end
+    end
+    l=1
+    while l<=N
+      A=rand(size(P[L-i])[1],size(P[L-i])[1])
+      (U,S,V)=svd(A)
+      for k=1:size(P[L-i])[1]
+        p_λ[k]=*(prod_1,U[k,:],U[k,:]',prod_2)[1]
+      end
+      if minimum(p_λ)>0
+        for k=1:size(P[L-i])[1]
+          entropy[L-i-1,l]-=p_λ[k]*log(p_λ[k])
+        end
+        l+=1
+      end
+    end
+  end
+  return minimum(entropy)
+end
+
+
+
 function tMPS_variant(C, h, t::Float64, Δt::Float64, D::Int64=Inf)
     N=div(t,Δt);
     d=size(C[1])[3];
@@ -483,5 +547,4 @@ function tMPS_variant(C, h, t::Float64, Δt::Float64, D::Int64=Inf)
       compress(C,D,:R)
       compress(C,D,:L)
     end
-
 end

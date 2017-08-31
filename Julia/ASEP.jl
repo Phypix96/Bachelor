@@ -1,34 +1,35 @@
 include("time_evolve.jl")
 using Plots
 
-L=4
-d=6
-t=50.
-Δt=0.05
-iter=10
+L=12
+d=16
+t=10.
+Δt=0.2
+iter=5
 
-α=0.4
+α=0.6
 β=0.3
 p_left=0.0
 p_right=1.0
 
 N=reshape([1. 0.; 0. 0.],(1,1,2,2))
 Ident=reshape([1. 0.; 0. 1.],(1,1,2,2))
-#N=complex(N)
-#Ident=complex(Ident)
+N=complex(N)
+Ident=complex(Ident)
 Right=Array{Any}(L)
 Left=Array{Any}(L)
 #den_MPS=zeros(41,41)
 #den_exp=zeros(41,41)
-flow_MPS=zeros(9,9)
-flow_exp=zeros(9,9)
-#for α=0.1:0.1:0.9
-  #for β=0.1:0.1:0.9
+flow_MPS=zeros(37,37)
+flow_exp=zeros(37,37)
+ent_entropy=zeros(41,41)
+for α=0.0:0.025:1.
+  for β=0.0:0.025:1.
 h1=[0 0 α 0; 0 -p_right p_left α; 0 p_right -p_left-α 0; 0 0 0 -α]
 h=[0 0 0 0; 0 -p_right p_left 0; 0 p_right -p_left 0; 0 0 0 0]
 hl=[-β 0 0 0; β -p_right p_left 0; 0 p_right -p_left-β 0; 0 0 β 0]
 
-#(h1,h,hl)=(complex(h1),complex(h),complex(hl))
+(h1,h,hl)=(complex(h1),complex(h),complex(hl))
 H=[h1,h,hl];
 Ht=[h1',h',hl']
 
@@ -37,30 +38,30 @@ Ht=[h1',h',hl']
 density=zeros(iter+1,L)
 flow=zeros(iter+1,L-1)
 for i=1:L
-  #Right[i]=complex(reshape([0.0;1.0],(1,1,2)))
-  #Left[i]=complex(reshape([0.0;1.0],(1,1,2)))
-  Right[i]=reshape([0.0;1.0],(1,1,2))
+  Right[i]=complex(reshape([0.0;1.0],(1,1,2)))
+  Left[i]=complex(reshape([0.0;1.0],(1,1,2)))
+  #Right[i]=reshape([0.0;1.0],(1,1,2))
   #Left[i]=reshape([0.0;1.0],(1,1,2))
 end
 
 for i=1:iter
   print(i,": ")
-  @time tMPS(Right,H,t,Δt,d)
-  #@time tMPS(Left,Ht,t,Δt,d)
+  tMPS(Right,H,t,Δt,d)
+  tMPS(Left,Ht,t,Δt,d)
   for j=1:L
     #density[i,j]=overlap(Left,Right,:real,(N,j))[1]/overlap(Left,Right,:real)[1]
-    density[i,j]=stoc_expect_val(Right,(N,j))[1]/stoc_expect_val(Right,(Ident,1))[1]
+    #density[i,j]=stoc_expect_val(Right,(N,j))[1]/stoc_expect_val(Right,(Ident,1))[1]
     if j<L
       #flow[i,j]=overlap(Left,Right,:real,(N,j),(Ident-N,j+1))[1]/overlap(Left,Right,:real,(Ident,1))[1]
     end
   end
 end
 
-@time tMPS(Right,H,5.,0.01,d)
-#@time tMPS(Left,Ht,5.,0.01,d)
+tMPS(Right,H,2.,0.05,d)
+tMPS(Left,Ht,2.,0.01,d)
 for j=1:L
   #density[iter+1,j]=overlap(Left,Right,:real,(N,j))[1]/overlap(Left,Right,:real,(Ident,1))[1]
-  density[iter+1,j]=stoc_expect_val(Right,(N,j))[1]/stoc_expect_val(Right,(Ident,1))[1]
+  #density[iter+1,j]=stoc_expect_val(Right,(N,j))[1]/stoc_expect_val(Right,(Ident,1))[1]
 
   if j<L
     #flow[iter+1,j]=overlap(Left,Right,:real,(N,j),(Ident-N,j+1))[1]/overlap(Left,Right,:real,(Ident,1))[1]
@@ -70,20 +71,22 @@ end
 
 b=1/(α^3)+1/(α^2*β)+1/(α*β^2)+1/(β^3)+2*(1/(α^2)+1/(α*β)+1/(β^2)+1/(α)+1/(β))
 a=1/(α^2)+1/(α*β)+1/(β^2)+1/(β)+1/(α)
-print(1/β*a/b)
+#print(1/β*a/b)
 #den_MPS[Int64(round((α-0.1)*50))+1, Int64(round((β-0.1)*50))+1]=density[iter+1,3]#-(1/β*a/b)
 #den_exp[Int64(round((α-0.1)*50))+1, Int64(round((β-0.1)*50))+1]=(1/β*a/b)
 #flow_MPS[Int64(round((α-0.1)*10))+1, Int64(round((β-0.1)*10))+1]=overlap(Left,Right,:real,(N,10),(Ident-N,11))[1]/overlap(Left,Right,:real,(Ident,1))[1]
-if α<0.5 && α<=β
-  flow_exp[Int64(round((α-0.1)*10))+1, Int64(round((β-0.1)*10))+1]=α*(1-α)
-elseif β<0.5 && β<α
-  flow_exp[Int64(round((α-0.1)*10))+1, Int64(round((β-0.1)*10))+1]=β*(1-β)
-elseif a>=0.5 && β>=0.5
-  flow_exp[Int64(round((α-0.1)*10))+1, Int64(round((β-0.1)*10))+1]=0.25
-end
+#if α<0.5 && α<=β
+#  flow_exp[Int64(round((α-0.1)*10))+1, Int64(round((β-0.1)*10))+1]=α*(1-α)
+#elseif β<0.5 && β<α
+#  flow_exp[Int64(round((α-0.1)*10))+1, Int64(round((β-0.1)*10))+1]=β*(1-β)
+#elseif a>=0.5 && β>=0.5
+#  flow_exp[Int64(round((α-0.1)*10))+1, Int64(round((β-0.1)*10))+1]=0.25
+#end
+
+ent_entropy[Int64(round((α-0.0)*40))+1, Int64(round((β-0.0)*40))+1]=entropy(Right)
 println(α," ",β)
-#end
-#end
+end
+end
 
 #density for α=0.7 β=0.6 D=20 t=2 Δt=0.2
 #[0.00914548 0.109235 0.0131391 0.048736 0.0171316 0.0447161 0.0159135 0.0257879 0.00978127 0.0206951 0.0108384 0.0148151 0.00710327 0.00899517 0.00423239 0.0198298 0.0090504 0.0592827 0.0272194 0.0572839 0.0480191 0.0390465 0.0445993 0.0404383 0.00812768 0.0447594 0.0182892 0.0421274 0.0171601 0.0462349 0.0150345 0.0640783 0.0197846 0.0872735 0.0264163 0.0293833 0.0128406 0.00269273 0.000200007 0.0; 0.0468595 0.588896 0.0899879 0.6079 0.202223 0.634237 0.196072 0.608774 0.221094 0.586874 0.16416 0.542993 0.175553 0.497477 0.11791 0.491768 0.108193 0.71119 0.205806 0.654298 0.255907 0.418321 0.469799 0.687229 0.179552 0.738183 0.197071 0.637128 0.2227 0.688838 0.18447 0.781264 0.181878 0.76374 0.201961 0.451647 0.118794 0.0140855 0.00289234 0.0; 0.0915291 0.81569 0.101991 0.77803 0.178346 0.77198 0.197755 0.768183 0.202335 0.771367 0.161593 0.750607 0.169119 0.793027 0.146118 0.837624 0.130079 0.762939 0.204419 0.719737 0.253513 0.649176 0.281002 0.757745 0.180003 0.753901 0.164358 0.749239 0.238651 0.741698 0.309838 0.625674 0.345708 0.606809 0.455087 0.459391 0.539867 0.507975 0.542051 0.0; 0.130402 0.868676 0.0880172 0.83474 0.14264 0.832074 0.139051 0.849821 0.142677 0.807166 0.141967 0.827163 0.161804 0.783917 0.144405 0.834461 0.127171 0.791616 0.214565 0.687623 0.284088 0.687328 0.294925 0.591222 0.394215 0.536981 0.397681 0.520904 0.45743 0.518813 0.47101 0.480878 0.516451 0.511419 0.479081 0.531608 0.307929 0.657248 0.584898 0.0; 0.128544 0.879194 0.0714446 0.854295 0.11512 0.849054 0.126072 0.852571 0.135837 0.829056 0.149877 0.816729 0.220249 0.683086 0.287446 0.556464 0.487114 0.51737 0.462916 0.524318 0.428891 0.529388 0.4656 0.472238 0.486311 0.493023 0.473202 0.509682 0.530445 0.484824 0.497784 0.479744 0.474463 0.499282 0.449405 0.531072 0.351206 0.571231 0.588468 0.0; 0.530511 0.610631 0.415698 0.475281 0.448969 0.454213 0.505864 0.500539 0.389527 0.54451 0.455138 0.519571 0.494324 0.492398 0.471354 0.490497 0.475489 0.528165 0.426862 0.506998 0.460858 0.505715 0.484792 0.488336 0.464585 0.484831 0.452267 0.469356 0.471414 0.506319 0.460394 0.477543 0.453446 0.504412 0.492482 0.436901 0.416694 0.658039 0.637866 0.0; NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN]
@@ -110,11 +113,18 @@ function den_prof(N,α,β)
   b=0.
 
   for i=1:N
-    c=i*factorial(2N-1-i)/(factorial(N)*factorial(N-i))*(1/β^(i+1)-1/α^(i+1))/(1/β-1/α)
-    b+=c
+    k=i*factorial(BigInt(2N-1-i))/(factorial(BigInt(N))*factorial(BigInt(N-i)))
+    if α!=β
+      k*=(1/β^(i+1)-1/α^(i+1))/(1/β-1/α)
+    end
+    b+=k
     if i<N
-      a+=i*factorial(2N-2-i)/(factorial(N-1)*factorial(N-1-i))*(1/β^(i+1)-1/α^(i+1))/(1/β-1/α)
+      l=i*factorial(BigInt(2N-3-i))/(factorial(BigInt(N-1))*factorial(BigInt(N-1-i)))
+      if α!=β
+        l*=(1/β^(i+1)-1/α^(i+1))/(1/β-1/α)
+      end
+      a+=l
     end
   end
-  return 1/β*a/b
+  return Float64(1/β*a/b)
 end

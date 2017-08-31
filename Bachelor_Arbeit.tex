@@ -26,13 +26,12 @@
 
 \begin{document}
 \maketitle
+\tableofcontents
 
-\part{Theoretsichen Grundlagen}
-
-\chapter{Matrix-Produkt Zustände}
+\chapter{Matrix-Produkt Zustände}\label{MPS_chapter}
 
 \section{Konstruktion eines MPS}\label{construction}
-Wir betrachten ein System aus $L$ Teilchen an festen Positionen. Jedes dieser Teilchen habe einen lokalen Konfigurationsraum mit Dimension $d$. Es kann nun jeder Zustand geschrieben werden als
+Wir betrachten ein System aus $L$ Teilchen an festen Positionen. Jedes dieser Teilchen habe einen lokalen Konfigurationsraum mit Dimension $d$. Es kann nun jeder Zustand geschrieben werden als 
 \begin{equation}\label{psi_equ}
 |\psi\rangle=\sum_{\SumIndex} c_{\SumIndex}|\SumIndex\rangle
 \end{equation}
@@ -55,7 +54,7 @@ c_{\SumIndex}&=\sum_{a_1}\sum_{a_2}A_{a_1}^{\sigma_1}U_{(a_1 \sigma_2),a_2}S_{a_
 \end{split}
 \end{equation}
 
-Die in Gleichung \ref{MPS_fin_equ} auftretenden Summen können als Matrizmultiplikationen aufgefasst werden. So kann also geschrieben werden\footnote{Es ist anzumerken, dass es sich bei den Matrizen $A^{\sigma_i}$ und $A^{\sigma_j}$ für $i\neq j$ um unterschiedliche Matrizen handelt. Um die Notation einfach zu halten, wird auf eine explizite Unterscheidung allerdings verzichtet.}
+Die in Gleichung \ref{MPS_fin_equ} auftretenden Summen können als Matrixmultiplikationen aufgefasst werden. So kann also geschrieben werden\footnote{Es ist anzumerken, dass es sich bei den Matrizen $A^{\sigma_i}$ und $A^{\sigma_j}$ für $i\neq j$ um unterschiedliche Matrizen handelt. Um die Notation einfach zu halten, wird auf eine explizite Unterscheidung allerdings verzichtet.}
 \begin{equation}
 c_{\SumIndex}=A^{\sigma_1}A^{\sigma_2}\ldots A^{\sigma_{L-1}}A^{\sigma_L}
 \end{equation}
@@ -78,40 +77,57 @@ Aus der gemischt-kanonischen Zerlegung kann einfach eine Schmidt-Zerlegung des Z
 |a_l\rangle_B&=\sum_{\SumIndex}(B^{\sigma_{l+1}}\ldots B^{\sigma_L})_{a_l,1}|\sigma_{l+1}\ldots\sigma_L\rangle\\
 \end{split}
 \end{equation}
-Diese Vektoren bilden aufgrund ihrer Konstruktion eine Orthogogalbasis. Daher lässt sich der Zustand $|\psi\rangle$ schreiben als
+Diese Vektoren bilden aufgrund ihrer Konstruktion eine Orthogonalbasis. Daher lässt sich der Zustand $|\psi\rangle$ schreiben als
 \begin{equation}
 |\psi\rangle=\sum_{a_l}S_{a_l,a_l}|a_l\rangle_A|a_l\rangle_B
 \end{equation}
 
 \section{Kompression eines MPS}\label{compress}
-Die Zerlegung eines Zustands in einen MPS bringt im Allgemeinen noch keinen numerischen Vorteil, da die Matrizengröße erneut exponentiell steigt. Es ist also nögtig, die Dimension der Matrizen signifikant zu reduzieren, und dabei einen möglichst kleinen Fehler in den Koeffizienten $c$ zu machen. Der einfachste Weg, dies zu machen führt erneut über die Singulärwertzerlegung.\\
+Die Zerlegung eines Zustands in einen MPS bringt im Allgemeinen noch keinen numerischen Vorteil, da die Matrizengröße erneut exponentiell steigt. Es ist also nötig, die Dimension der Matrizen signifikant zu reduzieren, und dabei einen möglichst kleinen Fehler in den Koeffizienten $c$ zu machen. Der einfachste Weg, dies zu machen führt erneut über die Singulärwertzerlegung.\\
 
 
-Wir betrachten einen gemischt-kanonischen MPS mit der Diagonalmatrix $S$ an Position $l$. Wie in Abschnitt \ref{construction} gezeigt, lässt sich aus dieser Form die Schmidt-Zerlegung $|\psi\rangle=\sum_{a_l=1}^D S_{a_l,a_l}|a_l\rangle_A|a_l\rangle_B$ des Zustandes ablesen. Dabei ist $D^\prime$ die Dimension der Diagonalmatrix. Ziel ist es nun, diese Dimension auf $D<D^\prime$ zu reduzieren, während die 2-Norm des Zustandes möglichst unverändert bleiben soll. Wie in \todo{Fehler von Beschränkung der Eigenwerte auf Seite 114, mit Quelle!} gezeigt, kann dies erreicht werden, in dem die Summe auf die $D$ größten Einträge in $S$ beschränkt wird. Der sich dabei ergebende Fehler ist dabei beschränkt durch \todo{$\lambda$ erklären}
-\begin{equation}
-||\,|\psi\rangle-|\psi_{trunc}\rangle||_2^2\leq 2\sum_{i=D^\prime+1}^D \lambda_i^2
-\end{equation}
+Wir betrachten einen gemischt-kanonischen MPS mit der Diagonalmatrix $S$ an Position $l$. Wie in Abschnitt \ref{construction} gezeigt, lässt sich aus dieser Form die Schmidt-Zerlegung $|\psi\rangle=\sum_{a_l=1}^D S_{a_l,a_l}|a_l\rangle_A|a_l\rangle_B$ des Zustandes ablesen. Dabei ist $D^\prime$ die Dimension der Diagonalmatrix. Ziel ist es nun, diese Dimension auf $D<D^\prime$ zu reduzieren, während die 2-Norm des Zustandes möglichst unverändert bleiben soll. Wie in \todo{Fehler von Beschränkung der Eigenwerte auf Seite 114, mit Quelle!} gezeigt, kann dies erreicht werden, in dem die Summe auf die $D$ größten Einträge in $S$ beschränkt wird. 
+%Der sich dabei ergebende Fehler ist dabei beschränkt durch
+%\begin{equation}
+%||\,|\psi\rangle-|\psi_{trunc}\rangle||_2^2\leq 2\sum_{i=D^\prime+1}^D S_{i,i}^2
+%\end{equation}
 
 Diese Kompression kann einfach auf den MPS Formalismus übertragen werden, indem von der Matrix $A^{\sigma_l}$ nur die ersten $D$ Spalten, von $B^{\sigma_{l+1}}$ die ersten $D$ Zeilen und von $S$ die ersten $D$ Zeilen und Spalten behalten werden. Es ist zu beachten, dass dabei die Norm des Zustandes nicht erhalten bleibt.\\
 
-Diese Dimensionsreduktion kann nur an deiner Position durchgeführt werden. Um für den gesamten MPS die maximale Dimension der Matrizen auf $D$ zu reduzieren, muss diese allerdings für jede vorgenommen werden. Wir nehmen im Folgenden an, es liegt ein links-kanonischer MPS vor.\footnote{Dies stellt kein Einschränkung da, da jeder Zustand auf einen links-kanonischnen umgeschrieben werde kann}\todo{Fußnote zitieren}. Zunächst werden die letzten Matrizen $A^{\sigma_L}$ zu einer zusammengefasst, indem der Index $\sigma_L$ mit dem Spalten-Index zusammengefasst wird.
+Diese Dimensionsreduktion kann nur an deiner Position durchgeführt werden. Um für den gesamten MPS die maximale Dimension der Matrizen auf $D$ zu reduzieren, muss diese allerdings für jede vorgenommen werden. Wir nehmen im Folgenden an, es liegt ein links-kanonischer MPS vor.\footnote{Dies stellt kein Einschränkung da, da jeder Zustand in einen links-kanonischen umgeschrieben werde kann}\todo{Fußnote zitieren}. Zunächst werden die letzten Matrizen $A^{\sigma_L}$ zu einer Matrix zusammengefasst, indem der Index $\sigma_L$ mit dem Spalten-Index zusammengefasst wird.
 
 \begin{equation}
-A_{a_{L-1},a_L}^{\sigma_L}\rightarrow A_{a_{L-1},(\sigma_L,a_L)}
+A_{a_{i-1},a_i}^{\sigma_i}\rightarrow A_{a_{i-1},(\sigma_i,a_i)}
 \end{equation}
 
 Diese Matrix wird nun einer Singulärwertzerlegung unterzogen, sodass $A=USV^\dagger$. $V^\dagger$ lässt sich nun erneut in $d$ rechts-orthogonale Matrizen $B^{\sigma_L}$ aufteilen. Der Zustand ließt sich nun als
 \begin{equation}
 |\psi\rangle=\sum_{\bm{\sigma}}A^{\sigma_1}\ldots A^{\sigma_{L-1}}USB^{\sigma_L}|\bm{\sigma}\rangle
 \end{equation}
-Es können nun die Matrizen $U$, $S$ und $B^{\sigma_L}$ wie zuvor beschrieben zu $\tilde{U}$, $\tilde{S}$ und $\tilde{B^{\sigma_L}}$ \textbf{trunkiert} werden. Anschließend wird $A^{\sigma_{L-1}}\tilde{U}\tilde{S}$ zu einer neuen Matrix $M^{\sigma_{L-1}}$ ausmultipliziert. Es kann nun derselbe Vorgang an der Position $L-1$ durchgeführt werden. Auf diese Art kann jede  Matrix auf eine maximale Dimension von $D$ reduziert werden. Der in Summe auftretende Fehler ist dabei beschränkt durch\todo{Abschätzung zitieren und fertig schreiben}
+Es können nun die Matrizen $U$, $S$ und $B^{\sigma_L}$ wie zuvor beschrieben zu $\tilde{U}$, $\tilde{S}$ und $\tilde{B}^{\sigma_L}$ \textbf{trunkiert} werden. Anschließend wird $A^{\sigma_{L-1}}\tilde{U}\tilde{S}$ zu einer neuen Matrix $M^{\sigma_{L-1}}$ ausmultipliziert. Es kann nun derselbe Vorgang an der Position $L-1$ durchgeführt werden. Auf diese Art kann jede  Matrix auf eine maximale Dimension von $D$ reduziert werden.
 \begin{equation}
-||\,|\psi\rangle-|\psi_{trunc}\rangle||_2^2\leq
+\begin{split}
+|\psi\rangle&\rightarrow \sum_{\bm{\sigma}}A^{\sigma_1}\ldots A^{\sigma_{L-2}}M^{\sigma_{L-1}}\tilde{B}^{\sigma_L}|\bm{\sigma}\rangle\rightarrow \sum_{\bm{\sigma}}A^{\sigma_1}\ldots (A^{\sigma_{L-2}}\tilde{U}\tilde{S})\tilde{B}^{\sigma_{L-1}}\tilde{B}^{\sigma_L}|\bm{\sigma}\rangle\rightarrow\\
+&\rightarrow \ldots=\sum_{\bm{\sigma}}\tilde{B}^{\sigma_1}\ldots \tilde{B}^{\sigma_{L}}|\bm{\sigma}\rangle
+\end{split}
 \end{equation}
-Dieser Algorithmus zur Kompression ist nicht optimal und kann für $D\ll D^\prime$ sehr langsam werden. Weiters ist es im allgemeinen nötig, den MPS zunächst in eine kanonische Form zu bringen. Es ist alternativ auch möglich, den MPS durch eine iterative Suche nach der trunkierten Matrix zu komprimieren, der den 2-Norm Abstant zu dem ursprüngchlichen MPS minimiert. Während diese Methode zwar optimal ist, stellt auch hier Geschwindigkeit ein Problem dar, wenn der erste Iterationsschritt zufällig gewählt wird.
+
+Der in Summe auftretende Fehler ist dabei beschränkt durch
+\begin{equation}
+||\,|\psi\rangle-|\psi_{trunc}\rangle||_2^2\leq 2\sum_{i=1}^{L}\epsilon_i(D)
+\end{equation}
+Dabei ist $\epsilon_i$ die Summe über alle bei der Näherung ignorierten Eigenwerte des reduzierten Dichteoperators. Dies ist aber gerade die Quadratsumme über alle ignorierten Singulärwerte.Dieser Fehler ist also klein, wenn das Eigenwert-Spektrum des reduzierten Dichteoperators schnell genug abfällt, um ab dem Element D keinen signifikanten Betrag zu leisten. \todo{Wann gilt das? Zitat!}
+
+Dieser Algorithmus kann auch von einem rechts-kanonischen Zustand aus begonnen werden. Dafür werden die Matrizen von links nach rechts komprimiert, und die einzelnen Matrizen $B^{\sigma_i}$ werden über den Zeilenindex zusammen gefasst.
+
+\begin{equation}
+B_{a_{i-1},a_{i}}^{\sigma_i}\rightarrow B_{(\sigma_i a_{i-1}),a_i}
+\end{equation}
+
+Diese Kompression ist nicht optimal und kann für $D\ll D^\prime$ sehr langsam werden. Weiters ist es im allgemeinen nötig, den MPS zunächst in eine kanonische Form zu bringen. Es ist alternativ auch möglich, den MPS durch eine iterative Suche nach der trunkierten Matrix zu komprimieren, der den 2-Norm Abstand zu dem ursprünglichen MPS minimiert. Während diese Methode zwar optimal ist, stellt auch hier Geschwindigkeit ein Problem dar, wenn der erste Iterationsschritt zufällig gewählt wird.
 
 \section{Erwartungswerte und Überläppe}\label{MPO}
-Um den Überlapp von zwei Zuständen $|\phi\rangle$ und $|\psi\rangle$ zu berechnen, ist es zuerst nögtig, den dualen Zustand durch Matrizen darstellen zu können. Aus der Zerlegung der Koeffizienten in Matrix-Produkte folgt dann
+Um den Überlapp von zwei Zuständen $|\phi\rangle$ und $|\psi\rangle$ zu berechnen, ist es zuerst nötig, den dualen Zustand durch Matrizen darstellen zu können. Aus der Zerlegung der Koeffizienten in Matrix-Produkte folgt dann
 \begin{equation}
 \langle\phi|=\sum_{\SumIndex} A^{\sigma_1\ast}\ldots A^{\sigma_L \ast}\langle\SumIndex| = \sum_{\SumIndex}A^{\sigma_L\dagger}\ldots A^{\sigma_1 \dagger}\langle\SumIndex|
 \end{equation}
@@ -124,7 +140,7 @@ Das direkte Berechnen dieser Summe ist für große Systeme in der Praxis nicht m
 \langle\phi|\psi\rangle=\sum_{\sigma_L}\tilde{A}^{\sigma_L\dagger}(\ldots(\sum_{\sigma_2}\tilde{A}^{\sigma_2\dagger}(\sum_{\sigma_1}\tilde{A}^{\sigma_1\dagger}A^{\sigma_1})A^{\sigma_2})\ldots)A^{\sigma_L}
 \end{equation}
 
-Um Erwartungswerte berechnen zu können, ist es zunächst nötig, die Wirkung eines Operators auf einen MPS zu untersuchen. Dafür ist eine Beschreibung des Operators im MPS Formalismus nötig, es wird von einem Matrix-Produkt Operator (MPO) gesprochen. Die Koeffizienten eines MPO können erneut als Prokukt von Matrizen geschrieben werden \todo{Quellen aus Schollwöck nachschlagen}. Damit ergibt sich für den Operator
+Um Erwartungswerte berechnen zu können, ist es zunächst nötig, die Wirkung eines Operators auf einen MPS zu untersuchen. Dafür ist eine Beschreibung des Operators im MPS Formalismus nötig, es wird von einem Matrix-Produkt Operator (MPO) gesprochen. Die Koeffizienten eines MPO können erneut als Produkt von Matrizen geschrieben werden \todo{Quellen aus Schollwöck nachschlagen}. Damit ergibt sich für den Operator
 \begin{equation}
 \hat{O}=\sum_{\bm{\sigma},\bm{\sigma^\prime}}W^{\sigma_1,\sigma_1^\prime}\ldots W^{\sigma_L,\sigma_L^\prime} |\bm{\sigma}\rangle\langle\bm{\sigma^\prime}|
 \end{equation}
@@ -138,7 +154,7 @@ Im Folgenden wollen wir den Effekt eines Operators auf einen MPS untersuchen. Zi
 &=\sum_{\bm{\sigma}}\sum_{\bm{a},\bm{b}}N_{(1,1),(b_1,a_1)}^{\sigma_1}N_{(b_1,a_1),(b_2,a_2)}^{\sigma_2}\ldots N_{(b_{L-1},a_{L-1}),(1,1)}^{\sigma_L}|\bm{\sigma}\rangle \\
 \end{split}
 \end{equation}
-Es lässt sich im letzten Schritt erneut die MPS-Form des ursprünglichen Zustands erkennen. Die Größe der Matrizen ist allerdings um die der MPO-Matrizen gestiegen. Zusammenfassend wird aus einer Matrix $A^{\sigma_i}$ unter anwendung eines MPO eine neue Matrix $N^{\sigma_i}$ wie folgt:
+Es lässt sich im letzten Schritt erneut die MPS-Form des ursprünglichen Zustands erkennen. Die Größe der Matrizen ist allerdings um die der MPO-Matrizen gestiegen. Zusammenfassend wird aus einer Matrix $A^{\sigma_i}$ unter Anwendung eines MPO eine neue Matrix $N^{\sigma_i}$ wie folgt:
 
 \begin{equation}
 N_{(b_{i-1},a_{i-1}),(b_i,a_i)}^{\sigma_i}=\sum_{\bm{\sigma_i^\prime}}W_{b_{i-1},b_i}^{\sigma_i\sigma_i^\prime}A_{a_{i-1},a_i}^{\sigma_i^\prime}
@@ -152,12 +168,12 @@ Damit ergibt sich der Erwartungswert eines Operators zu
 
 Um die Dynamik eines MPS berechnen zu können, ist eine Beschreibung des Zeitentwicklungs-Operators $e^{-it\hat{H}t}$ als MPO nötig. Dies erfordert, dass der gesamte Operator als Matrix-Produkt geschrieben wird, in dem die Wirkung auf die einzelnen Gitterplätze völlig faktorisiert ist, also eine Matrix nur auf eine Position einwirkt. Im folgenden werden nur Interaktionen zwischen benachbarten Gitterplätzen behandelt, auch wenn weiter reichende Interaktionen prinzipiell beschrieben werden können.
 
-Führt man $\hat{h}_{i,i+1}$ als Wechselwirkungs-Hamiltonian zwichen den Teilchen an Positionen $i$ und $i+1$ ein, ergibt sich für den Gesamt-Hamiltionan
+Führt man $\hat{h}_{i,i+1}$ als Wechselwirkungs-Hamiltonian zwischen den Teilchen an Positionen $i$ und $i+1$ ein, ergibt sich für den Gesamt-Hamiltionan
 \begin{equation}
 \hat{H}=\sum_{i=1}^{L-i}\hat{h}_{i,i+1}
 \end{equation}
 
-Im Allgemeien hat dieser Operator Dimension $d^L$ und kann daher nicht exakt berechnet werden. Betrachtet man nun einen kleinen Zeitschritt $\tau$, so kann mittels einer Trotter-Zerlegung 1. Ordnung der Zeitentwicklungs-Operator geschrieben werden als
+Im Allgemeinen hat dieser Operator Dimension $d^L$ und kann daher nicht exakt berechnet werden. Betrachtet man nun einen kleinen Zeitschritt $\tau$, so kann mittels einer Trotter-Zerlegung 1. Ordnung der Zeitentwicklungs-Operator geschrieben werden als\todo{Anhang Trotter-Zerlegung bis 2.Ordnung}
 
 \begin{equation}\label{Trotter_equ}
 e^{-i\hat{H}\tau}= e^{-i\hat{h}_{1,2}\tau}e^{-i\hat{h}_{2,3}\tau}\ldots e^{-i\hat{h}_{L-1,L}\tau}+O(\tau^2)
@@ -173,7 +189,7 @@ e^{-i\hat{H}\tau}&=(e^{-i\hat{h}_{1,2}\tau}e^{-i\hat{h}_{3,4}\tau}\ldots)(e^{-i\
 \end{split}
 \end{equation}
 
-Diese Abschätzung lässt sich weiter verbessern, indem eine Trotterzerlegung 2. Ordnung durchgeführt wird. Diese nimmt folgende Form an
+Diese Abschätzung lässt sich weiter verbessern, indem eine Trotter-Zerlegung 2. Ordnung durchgeführt wird. Diese nimmt folgende Form an
 \begin{equation}
 e^{-i\hat{H}\tau}=e^{-i\hat{H}_{\text{odd}}\tau/2}e^{-i\hat{H}_{\text{even}}\tau}e^{-i\hat{H}_{\text{odd}}\tau/2}+O(\tau^3)
 \end{equation}
@@ -182,7 +198,7 @@ Diese Näherung kann weiter verbessert werden, indem höhere Ordnungen der Zerle
 
 Führt man nun mehrere dieser Zeitschritte hintereinander aus, kann der benötigte Rechenaufwand signifikant reduziert werden, indem ausgenutzt wird, dass $\hat{H}_{\text{odd}}$ mit sich selbst kommutiert. Dadurch können der letzte und der erste Term zweier aufeinanderfolgender Trotter-Zerlegungen 2. Ordnung zu einem zusammengefasst werden ohne an Genauigkeit zu verlieren.\par
 
-In der aktuellen Form kann der Zeitentwicklungs-Operator jedoch noch nicht auf eien MPS angewandt werden. Dazu ist es zunächst nötig, diesen in einen MPO umzuformen, bei dem ein Operator nur auf eine Posiiton wirkt. Dafür soll zunächst o.B.d.A. der Operator $e^{-i\hat{h}_{1,2}\tau}\equiv O$ betrachtet werden. Ziel ist es, diesen zu einem Produkt von 1-Teilchen Operatoren zu faktorisieren. Dafür wird zunächst die Basis des Operators $O$ von $(\sigma_1\sigma_2,\sigma_1^{\prime}\sigma_2^{\prime})$ zu $(\sigma_1\sigma_1^{\prime},\sigma_2\sigma_2^{\prime})$ umsortiert. Um dies in ein Matrix-Produkt zu zerlegen wird anschließend noch eine Singulärwert-Zerlegung durchgefürht. 
+In der aktuellen Form kann der Zeitentwicklungs-Operator jedoch noch nicht auf einen MPS angewandt werden. Dazu ist es zunächst nötig, diesen in einen MPO umzuformen, bei dem ein Operator nur auf eine Position wirkt. Dafür soll zunächst o.B.d.A. der Operator $e^{-i\hat{h}_{1,2}\tau}\equiv O$ betrachtet werden. Ziel ist es, diesen zu einem Produkt von 1-Teilchen Operatoren zu faktorisieren. Dafür wird zunächst die Basis des Operators $O$ von $(\sigma_1\sigma_2,\sigma_1^{\prime}\sigma_2^{\prime})$ zu $(\sigma_1\sigma_1^{\prime},\sigma_2\sigma_2^{\prime})$ umsortiert. Um dies in ein Matrix-Produkt zu zerlegen wird anschließend noch eine Singulärwert-Zerlegung durchgeführt. 
 
 \begin{equation}
 O^{\sigma_1 \sigma_2,\sigma_1^\prime \sigma_2^\prime}=P_{(\sigma_1 \sigma_2),(\sigma_1^\prime \sigma_2^\prime)}=\sum_k U_{(\sigma_1 \sigma_1^\prime),k}S_{k,k}V_{k,(\sigma_2 \sigma_2^\prime)}^\dagger=\sum_k M_{1,k}^{\sigma_1 \sigma_1^\prime} \bar{M}_{k,1}^{\sigma_2 \sigma_2^\prime}
@@ -197,12 +213,50 @@ Es wurden hier die neuen Matrizen $M^{\sigma_1,\sigma_1^{\prime}}$ und $\bar{M}^
 \end{equation}
 Dieser MPO kann nun, wie in Abschnitt \ref{MPO} erläutert, auf den MPS angewandt werden.
 
+\section{Stochastische Matrix-Produkt Zustände}
+In in diesem Kapitel wurde bereits behandelt, wie ein quantenmechanische Zustand in die Form eines MPS gebracht werden kann. Es ist allerdings auch möglich, eine klassische Wahrscheinlichkeitsverteilung $P(\SumIndex)$ derart zu zerlegen. Der zu dieser Verteilung gehörige Zustand $|p\rangle$ kann geschrieben werden als
+\begin{equation}
+|p\rangle=\sum_{\SumIndex}P(\SumIndex)|\SumIndex\rangle
+\end{equation}
+
+Da es sich um Wahrscheinlichkeiten handelt, normiert man diesen Zustand über die $\text{L}_1$-Norm, also $\sum_{\bm{\sigma}}P(\bm{\sigma})=1$. Ziel ist es nun, $P(\bm{\sigma})$ als Produkt von Matrizen zu schreiben, also
+\begin{equation}
+P(\bm{\sigma})=A^{\sigma_1}\ldots A^{\sigma_L}
+\end{equation}
+
+Um dieses Produkt weiterhin durch die $\text{L}_1$-Norm normieren zu können, muss von den Matrizen gefordert werden, dass sie elementweise positiv sind, also $A_{a_i,a_i+1}^{\sigma_{i+1}}\geq 0$. Man spricht in diesem Fall von einem stochastischen Matrix-Produkt Zustand (sMPS), da die Einträge der Matrizen als Wahrscheinlichkeiten aufgefasst werden können.
+
+Versucht man nun allerdings, die Koeffizienten analog zu \ref{MPS_constr_equ} in Matrizen aufzuteilen, ist eben dies im Allgemeinen nicht der Fall, da eine Singulärwert-Zerlegung Matrizen mit negativen Einträgen erzeugen kann. Wird allerdings eine nicht-negative Matrix Faktorisierung (NMF) verwendet, können die Koeffizienten analog zu Gleichung \ref{MPS_constr_equ} in das Produkt von Matrizen aufgeteilt werden.\\
+
+
+%Zur Berechnung der Norm sowie von Erwartungswerten eines sMPS Zustands wird zunächst ein dualer Hilfszustand definiert
+%\begin{equation}
+%\langle\mathbf{I}|=\sum_{\SumIndex}\mathbb{1}^{\sigma_1}\ldots\mathbb{1}^{\sigma_L}\langle\SumIndex|
+%\end{equation}
+%Hierbei bezeichnet $\mathbb{1}^{\sigma_i}$ eine Einheitsmatrix, deren Zeilendimension mit der von $A^{\sigma_i}$ übereinstimmt. Es gilt dann
+%\begin{equation}
+%\begin{split}
+%\parallel|p\rangle\parallel_1&=\sum_{\SumIndex}A^{\sigma_1}\ldots A^{\sigma_L}=\sum_{\sigma_1}A^{\sigma_1}(\ldots(\sum_{\sigma_L}A^{\sigma_L})\ldots)\\
+%&=\sum_{\sigma_1}\mathbb{1}^{\sigma_1}A^{\sigma_1}(\ldots(\sum_{\sigma_L}\mathbb{1}^{\sigma_1}A^{\sigma_L})\ldots)=\langle\mathbf{I}|p\rangle
+%\end{split}
+%\end{equation}
+
+Um den Erwartungswert eines Operators zu berechnen, muss dieser zunächst als MPO dargestellt werden. Die Anwendung dieses MPO's auf den Zustand erfolgt dann völlig analog zu Gleichung \ref{MPO_MPS_equ} und man erhält einen neuen Satz Matrizen $N^{\sigma_i}$. Mittels dieser kann $\langle\hat{O}\rangle$ wie folgt berechnet werden
+
+\begin{equation}
+\langle\hat{O}\rangle=\parallel \hat{O}|p\rangle\parallel_1=\sum_{\SumIndex}N^{\sigma_1}\ldots N^{\sigma_L}=\sum_{\sigma_1}N^{\sigma_1}(\ldots(\sum_{\sigma_L}N^{\sigma_L})\ldots)
+\end{equation}
+
+Auch die Zeitentwicklung und Kompression eines sMPS kann analog zu einem normalen MPS durchgeführt werden. Es reicht dabei, die Singulärwert-Zerlegungen durch eine NMF zu ersetzen. Es ist allerdings zu beachten, dass sich das Verhalten des Fehlers bei der Kompression eines sMPS ändert, da dieser nicht mit der $L_2$, sondern der $L_1$-Norm normiert wird. Daraus folgt, dass 
+\todo{Norm-Unterschiede}
+
+
 \chapter{Das ASEP-Modell}
-Das ASEP-Modell (Asymmetric Simple Exclusion Process) beschreibt ein eindimensionales System mit offenen Randbedingungen. Es handelt sich um ein Gitter aus $L$ Positionen, die entweder einfach besetzt oder unbesetzt sind. Ist der erste Gitterplatz unbesetzt, so wird nach dem Zeitschritt $dt$ mit einer Wahrscheinlichkeit von $\alpha dt$ ein Teilchen an dieser Position eingesetzt. Weiters wird in diesem Zeitschritt mit der Wahrscheinlichkeit $\beta dt$ ein Teilchen an der letzten Position aus dem Gitter entnommen, wenn diese besetzt ist. Zwischen den Gitterplätzen können sich die Teilchen nur in Richtung des letzten Gitterplatzes bewegen, was sie mit der Wahrscheinlichkeit $dt$ tun, vorausgesetzt der nächste Platz ist unbesetzt.\todo{Weitere Quelle finden}\\
+Das ASEP-Modell (Asymmetric Simple Exclusion Process) beschreibt ein eindimensionales System mit offenen Randbedingungen. Es handelt sich um ein Gitter aus $L$ Positionen, die entweder einfach besetzt oder unbesetzt sind. Ist der erste Gitterplatz unbesetzt, so wird nach dem Zeitschritt $dt$ mit einer Wahrscheinlichkeit von $\alpha dt$ ein Teilchen an dieser Position eingesetzt. Weiters wird in diesem Zeitschritt mit der Wahrscheinlichkeit $\beta dt$ ein Teilchen an der letzten Position aus dem Gitter entnommen, wenn diese besetzt ist. Zwischen den Gitterplätzen können sich die Teilchen nur in Richtung des letzten Gitterplatzes bewegen, was sie mit der Wahrscheinlichkeit $pdt$ tun, vorausgesetzt der nächste Platz ist unbesetzt.\todo{Weitere Quelle finden} Da der einzige Einfluss des konkreten Wertes von $p$ eine Skalierung der Zeit ist, wird  dieser üblicherweise 1 gesetzt.\\
 
 \section{Mathematische Beschreibung}
 Die Dynamik des Systems kann zunächst durch Ratengleichungen beschrieben werden. Dafür sei $p_i(t+dt)$ die Wahrscheinlichkeit, dass die Position $i$ zum Zeitpunkt $t+dt$ besetzt ist und $\tau_i$ die Besetzungszahl zum Zeitpunkt $t$. Wir müssen hierbei drei Fälle unterscheiden:
-\begin{equation}
+\begin{equation}\label{rate_equ}
 p_i(t+dt)=
 \begin{cases}
 \tau_1+[\alpha(1-\tau_1)-\tau_1(1-\tau_2)]dt & \text{if}\ i=1\\
@@ -226,7 +280,7 @@ Um diesen stationären Zustand zu finden muss zunächst
 \end{split}
 \end{equation}
 
-Gleichung \ref{P_umständlich} lässt sich in eine übersichtlichere Form bringen, indem die auftretenden Koeffizienten als Matrixelemente aufgefasst werden. Diese Matrizen können mittels der Übergansraten der Zustände ineinander konstruiert werden. Geht so beispielsweise ein Zustand $|a\rangle$ mit einer Rate $p$ in den Zustand $|b\rangle$ über und $|b\rangle$ mit einer Rate $q$ in $|a\rangle$, hätte die zugehörige Matrix $m$ in der Basis $(|a\rangle,|b\rangle)$ die Form
+Gleichung \ref{P_umständlich} lässt sich in eine übersichtlichere Form bringen, indem die auftretenden Koeffizienten als Matrixelemente aufgefasst werden. Diese Matrizen können mittels der Übergangsraten der Zustände ineinander konstruiert werden. Geht so beispielsweise ein Zustand $|a\rangle$ mit einer Rate $p$ in den Zustand $|b\rangle$ über und $|b\rangle$ mit einer Rate $q$ in $|a\rangle$, hätte die zugehörige Matrix $m$ in der Basis $(|a\rangle,|b\rangle)$ die Form
 \begin{equation}
 m=
 \begin{pmatrix}
@@ -235,7 +289,7 @@ p&-q\\
 \end{pmatrix}
 \end{equation}
 
-Die negativen Einträge stammen daher, dass ein Zustand mit derselben Rate verlassen wird, mit der er in andere übergeht. Daher ist die Summe über alle Einträge einer solchen Matrix stets 0.\todo{ev. anderes Paper zum zitieren}\\
+Die negativen Einträge stammen daher, dass ein Zustand mit derselben Rate verlassen wird, mit der er in andere übergeht. Daher ist die Summe über alle Einträge einer Spalte einer solchen Matrix stets 0\cite{ASEP_Update}.\\
 
 Dieser Konstruktion folgend erhält man für das ASEP-Modell drei Matrizen. Diese stellen, der Reihe nach, die Vorgänge des Einfügens und Entnehmens eines Teilchens dar, sowie das Hüpfen eines Teilchens auf den benachbarten Platz. Die verwendete Basis ist $(|1\rangle,|0\rangle)$ sowie $(|1\rangle,|0\rangle)\otimes(|1\rangle,|0\rangle)$
 
@@ -271,7 +325,7 @@ Mit diesen Matrizen kann erneut die zeitliche Änderung des Zustandes beschriebe
 \end{split}
 \end{equation}
 
-Wie man durch Einsetzen überprüfen kann, stimmen Gleichungen \ref{P_umständlich} und \ref{P_einfach} überein. Vergleicht man Gleichung \ref{P_einfach} mit Gleichung \ref{MPO_MPS_equ}, so kann man diese als die Wirkung eines Opeators $\hat{H}=\hat{h}_1+\hat{h}_L+\sum_{i=1}^L\hat{h}_{i,i+1}$\footnote{Dabei ist der Operator $h_{i,i+1}$ der Operator $h$ einwirkend auf Positionen $i$ und $i+1$} auf $P_L$ auffassen. \todo{Abklären, ob das so stimmt} Damit vereinfacht sich das Problem weiter zu
+Wie man durch Einsetzen überprüfen kann, stimmen Gleichungen \ref{P_umständlich} und \ref{P_einfach} überein. Vergleicht man Gleichung \ref{P_einfach} mit Gleichung \ref{MPO_MPS_equ}, so kann man diese als die Wirkung eines Operators $\hat{H}=\hat{h}_1+\hat{h}_L+\sum_{i=1}^L\hat{h}_{i,i+1}$ auf $P_L$ auffassen.\footnote{Dabei ist der Operator $h_{i,i+1}$ der Operator $h$ einwirkend auf Positionen $i$ und $i+1$} Damit vereinfacht sich das Problem weiter zu
 \begin{equation}
 \frac{d}{dt}P_L=\hat{H}P_L
 \end{equation}
@@ -284,7 +338,68 @@ P_L(t)=e^{\hat{H}t}P_L(0)
 
 \section{Analytische Lösung}
 
+Das Studium des ASEP-Modells ist unter anderem deshalb sehr nützlich, da ein analytische Lösung existiert, mit der die Ergebnisse einer Näherung verglichen werden können. Aus diesem Grund werden hier die analytischen Lösungen für die mittlere Besetzungszahl an einer beliebigen Position $i$ sowie dem Fluss durch das Gitter im stationären Zustand zusammengefasst.
 
+Im Folgenden bezeichne $hat{N}_i$ den Besetzungsoperator an dem Gitterplatz $i$ eines $L$-Positionen ASEP-Modells. Für die mittlere Besetzungszahl $\langle\hat{N}_i\rangle$ gilt dann
+\begin{equation}
+\langle\hat{N}_i\rangle_L=\sum_{k=0}^{L-i-1}\frac{2k!}{k!(k+1)!}\frac{R(L-i-k-1)}{R(L)}+\frac{R(i-1)}{R(L)}\sum_{k=2}^{L-i+1}\frac{(k-1)(2(L-i)-k)!}{(L-i)!(L-i-k+1)!}\beta^{-k}
+\end{equation}
+
+Die Funktion $R(n)$ ist hierbei gegeben durch\footnote{Die Abhängigikeit von $\alpha$ und $\beta$ wird hier aus Gründen der Übersicht nicht explizit angegeben}
+\begin{equation}
+R(n)=\sum_{k=1}^{n}\frac{k(2n-1+k)!}{n!(n-k)!}\frac{\beta^{-k-1}-\alpha^{-k-1}}{\beta^{-1}-\alpha^{-1}}
+\end{equation}
+
+Dies für große Systeme zu berechnen ist insofern problematisch, da Faktoren bis zu $(2L-2)!$ auftreten. Für große $L$ kann es daher sein, dass auf die asymptotische Lösung für $L\rightarrow\infty$ zurückgegriffen werden muss. Hierbei unterscheidet man zwischen der Lösung an den beiden Rändern des Gitters sowie für Plätze weit entfernt von jenen.
+
+\begin{equation}\label{density_equ}
+\langle\hat{N}_i\rangle_L\simeq
+\begin{cases}
+\frac{1}{2}&\text{für }\alpha\geq\frac{1}{2}\text{ und }\beta\geq\frac{1}{2}\\
+\alpha&\text{für }\alpha<\frac{1}{2}\text{ und }\beta\leq\alpha\\
+1-\beta&\text{für }\beta<\frac{1}{2}\text{ und }\alpha\leq\beta\\
+\alpha+\frac{i}{L}(1-2\alpha)&\text{für }\alpha=\beta<\frac{1}{2}\\
+\end{cases}
+\end{equation}
+
+Es ist zu sehen, dass die Dichte im Zentrum des Gitters (also für $i/L\simeq 1/2$) im Fall $\alpha<\frac{1}{2}\text{ und }\beta\leq\alpha$ minimal und im Fall $\beta<\frac{1}{2}\text{ und }\alpha\leq\beta$ maximal wird. 
+
+Zur kompakten Beschreibung der Dichten an den Rändern wird zunächst eine neue Größe $\kappa$ eingeführt. Diese ist für große $n$ gegeben durch $\kappa^{-n}=f(\alpha,\beta)R(n)$. Der Faktor $f(\alpha,\beta)$ ist hier nicht relevant, da in den Gleichungen für die Dichten nur Terme der Form $R(a)/R(b)$ vorkommen. Wie in \cite{ASEP} gezeigt, ergibt sich für $\kappa$
+\begin{equation}
+\kappa=
+\begin{cases}
+\frac{1}{4}&\text{für }\alpha\geq\frac{1}{2}\text{ und }\beta\geq\frac{1}{2}\\
+\alpha(1-\alpha)&\text{für }\alpha\leq\frac{1}{2}\text{ und }\beta>\alpha\\
+\beta(1-\beta)&\text{für }\beta\leq\frac{1}{2}\text{ und }\alpha>\beta\\
+\end{cases}
+\end{equation}
+
+Damit lassen sich die erwarteten Dichten am ersten und letzen Gitterplatz schreiben als
+\begin{equation}
+\langle\hat{N}_1\rangle_L=1-\frac{\kappa}{\alpha} \qquad \langle\hat{N}_L\rangle_L=\frac{\kappa}{\beta}
+\end{equation}
+
+Der Fluss der Teilchen durch das Gitter kann berechnet werden als der Erwartungswert, dass ein Teilchen auf den nächsten Gitterplatz springt. Die Wahrscheinlichkeit, dass dies passiert wurde in Gleichung \ref{rate_equ} bereits verwendet, und ist durch $\tau_i(1-\tau_{i+1})dt$ gegeben. Wie in \cite{ASEP} gezeigt wurde, kann dann der Fluss $J$ zwischen zwei benachbarten Gitterplätzen im stationären Zustand berechnet werden durch
+\begin{equation}
+J=\langle\hat{N}_i(\hat{\mathbb{1}}-\hat{N}_{i+1})\rangle_L=\frac{R(L-1)}{R(L)}
+\end{equation}
+
+Betrachtet man den Grenzfall $L\rightarrow\infty$, ergibt sich
+\begin{equation}
+J=\kappa
+\end{equation}
+
+Diese drei Fälle, welche für $\kappa$ und damit $J$ unterschieden werden, bilden die Phasen des ASEP-Modells. Wie leicht gesehen werden kann, ist der Fluss im Fall $\alpha\geq\frac{1}{2}\text{ und }\beta\geq\frac{1}{2}$ am größten, man spricht daher von der maximal-Fluss Phase. Die Fälle $\alpha\leq\frac{1}{2}\text{ und }\beta>\alpha$ und $\beta\leq\frac{1}{2}\text{ und }\alpha>\beta$ werden 'niedrige Dichte' und 'hohe Dichte'\todo{bessere Namen?} Phase genannt (vgl. \ref{density_equ}). 
+
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.6]{Julia/ASEP-Phasen.png}
+\caption{Der Fluss $J$. Die Linien zeigen die Phasengrenzen an}
+\end{center}
+\end{figure}
+
+ 
 
 \section{Implementierung im MPS-Formalismus}
 
@@ -323,10 +438,31 @@ Die Zeitentwicklung dieser ist nun analog zu der aus Gleichung \ref{ASEP_solutio
 \end{pmatrix}
 \end{equation} 
 
-Mit diesen Matrizen kann nun die Zeitentwicklung des Zustandes $|\psi\rangle$ berechnet werden. Um Erwartungswerte zu berechen ist allerdings nicht nur $|\psi(t)\rangle$, sondern auch $\langle\psi(t)|$ nötig. Löst man die Gleichung \ref{ASEP_solution_equ} erneut für $\langle\psi|$, so findet man
+Mit diesen Matrizen kann nun die Zeitentwicklung des Zustandes $|\psi\rangle$ berechnet werden. Um Erwartungswerte zu berechnen ist allerdings nicht nur $|\psi(t)\rangle$, sondern auch $\langle\psi(t)|$ nötig. Löst man die Gleichung \ref{ASEP_solution_equ} erneut für $\langle\psi|$, so findet man
 \begin{equation}
 \langle\psi(t)|=\langle\psi|e^{\hat{H}t}=(e^{\hat{H}^\dagger t}|\psi\rangle)^\dagger
 \end{equation}
 Für normale, quantenmechanische Systeme wäre $\hat{H}$ hermitesch, und es gilt daher $\langle\psi(t)|=(|\psi(t)\rangle)^\dagger$. Dies ist hier aufgrund der Asymmetrie des Problems nicht der Fall! Es muss daher, um Erwartungswerte zu berechnen, sowohl $e^{\hat{H} t}|\psi\rangle$ als auch $e^{\hat{H}^\dagger t}|\psi\rangle$ berechnet werden.
+
+Die im ASEP-Modell relevanten Größen sind die Erwartungswerte der Besetzungszahl eines Gitterplatzes sowie des Flusses von einem Platz zum nächsten. Um diese zu berechnen ist der Besetzungs-Operator in der bisher verwendeten Basis nötig. Er ist gegeben durch
+\begin{equation}
+\hat{N}^{\tau_i,\tau_i^{\prime}}=
+\begin{cases}
+1&\text{für }\tau_i=\tau_i^{\prime}=1\\
+0&\text{sonst}
+\end{cases}
+\end{equation}
+
+\chapter{Implementierung}
+
+
+\chapter{Anhang}
+\section{Trotter-Zerlegung}
+
+\section{SVD und NMF}
+
+\bibliographystyle{plain}
+\bibliography{Bibliografie} 
+
 %Bessere Konvergenz: Zustand für kleines System berechnen, davon den für großes erraten
 \end{document}

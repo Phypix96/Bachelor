@@ -1,0 +1,38 @@
+\begin{thebibliography}{1}
+
+\bibitem{ASEP}
+B~Derrida, M~R Evans, V~Hakim, and V~Pasquier.
+\newblock Exact solution of a 1d asymmetric exclusion model using a matrix
+  formulation.
+\newblock {\em Journal of Physics A: Mathematical and General}, 26(7):1493,
+  1993.
+
+\bibitem{MPS-vs-sMPS}
+T.~H. Johnson, S.~R. Clark, and D.~Jaksch.
+\newblock Dynamical simulations of classical stochastic systems using matrix
+  product states.
+\newblock {\em Phys. Rev. E}, 82:036702, Sep 2010.
+
+\bibitem{ASEP_Update}
+N.~Rajewsky, L.~Santen, A.~Schadschneider, and M.~Schreckenberg.
+\newblock The asymmetric exclusion process: Comparison of update procedures.
+\newblock {\em Journal of Statistical Physics}, 92(1):151--194, Jul 1998.
+
+\bibitem{MPS-main}
+Ulrich Schollwöck.
+\newblock The density-matrix renormalization group in the age of matrix product
+  states.
+\newblock {\em Annals of Physics}, 326(1):96 -- 192, 2011.
+\newblock January 2011 Special Issue.
+
+\bibitem{sMPS}
+Kristan Temme and Frank Verstraete.
+\newblock Stochastic matrix product states.
+\newblock {\em Phys. Rev. Lett.}, 104:210502, May 2010.
+
+\bibitem{MPS_error}
+F.~Verstraete and J.~I. Cirac.
+\newblock Matrix product states represent ground states faithfully.
+\newblock {\em Phys. Rev. B}, 73:094423, Mar 2006.
+
+\end{thebibliography}
