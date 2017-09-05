@@ -2,18 +2,18 @@
 \contentsline {chapter}{\numberline {1}Matrix-Produkt Zust\IeC {\"a}nde}{2}
 \contentsline {section}{\numberline {1.1}Konstruktion eines MPS}{2}
 \contentsline {section}{\numberline {1.2}Kompression eines MPS}{3}
-\contentsline {section}{\numberline {1.3}Erwartungswerte und \IeC {\"U}berl\IeC {\"a}ppe}{4}
-\contentsline {section}{\numberline {1.4}Zeitentwicklung}{5}
+\contentsline {section}{\numberline {1.3}Erwartungswerte und \IeC {\"U}berl\IeC {\"a}ppe}{5}
+\contentsline {section}{\numberline {1.4}Zeitentwicklung}{6}
 \contentsline {section}{\numberline {1.5}Stochastische Matrix-Produkt Zust\IeC {\"a}nde}{7}
-\contentsline {chapter}{\numberline {2}Das ASEP-Modell}{8}
-\contentsline {section}{\numberline {2.1}Mathematische Beschreibung}{8}
-\contentsline {section}{\numberline {2.2}Analytische L\IeC {\"o}sung}{9}
-\contentsline {chapter}{\numberline {3}Implementierung}{12}
-\contentsline {section}{\numberline {3.1}Implementierung im MPS-Formalismus}{12}
-\contentsline {section}{\numberline {3.2}Dichte-Verteilung und Fluss}{13}
-\contentsline {subsection}{\numberline {3.2.1}MPS}{13}
-\contentsline {subsection}{\numberline {3.2.2}sMPS}{13}
-\contentsline {section}{\numberline {3.3}Transinformation und Entropie}{13}
-\contentsline {chapter}{\numberline {4}Anhang}{14}
-\contentsline {section}{\numberline {4.1}Trotter-Zerlegung}{14}
-\contentsline {section}{\numberline {4.2}SVD und NMF}{14}
+\contentsline {chapter}{\numberline {2}Das ASEP-Modell}{9}
+\contentsline {section}{\numberline {2.1}Mathematische Beschreibung}{9}
+\contentsline {section}{\numberline {2.2}Analytische L\IeC {\"o}sung}{10}
+\contentsline {chapter}{\numberline {3}Implementierung}{13}
+\contentsline {section}{\numberline {3.1}Implementierung im MPS-Formalismus}{13}
+\contentsline {section}{\numberline {3.2}Dichte-Verteilung und Fluss}{14}
+\contentsline {subsection}{\numberline {3.2.1}MPS}{14}
+\contentsline {subsection}{\numberline {3.2.2}sMPS}{15}
+\contentsline {section}{\numberline {3.3}Gemeinsame Information und Entropie}{15}
+\contentsline {chapter}{\numberline {4}Anhang}{17}
+\contentsline {section}{\numberline {4.1}Trotter-Zerlegung}{17}
+\contentsline {section}{\numberline {4.2}SVD und NMF}{17}

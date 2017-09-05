@@ -104,15 +104,18 @@ function tMPS(C, h::Vector{Array{Float64,2}}, t::Float64, Δt::Float64, D::Int64
     #as Op_1 commutes with itself, if N>1 two consecutive steps with Op_1 can be combined
     for i=1:N-1
       asym_operator_2bond(C,:even,Op_2,Op_2_l)
-      compress(C,D,:L;stochastic=true)
-      compress(C,D,:R;stochastic=true)
+      if i%2==0
+        compress(C,D,:L;stochastic=true)
+      else
+        compress(C,D,:R;stochastic=true)
+      end
       asym_operator_2bond(C,:uneven,Op_2,Op_2_1,Op_2_l)
     end
     compress(C,D,:R;stochastic=true)
-    compress(C,D,:L;stochastic=true)
+    #compress(C,D,:L;stochastic=true)
     asym_operator_2bond(C,:even,Op_2,Op_2_l)
     asym_operator_2bond(C,:uneven,Op_1,Op_1_1,Op_1_l)
-    compress(C,D,:R;stochastic=true)
+    #compress(C,D,:R;stochastic=true)
     compress(C,D,:L;stochastic=true)
 
 end
@@ -464,24 +467,28 @@ function entropy(C::Array{Any})
     end
     (U,S,V)=svd(H);
     for j=1:size(S)[1]
-      entropy[L-i-1]-=S[j]*log(S[j])
+      entropy[L-i-1]-=S[j]^2*log(S[j]^2)
     end
     (C[L-i],C[L-i-1])=right_norm(C[L-i], C[L-i-1],20)
   end
-  return minimum(entropy)
+  return (minimum(entropy),maximum(entropy))
 end
 
 
-function stoc_entropy(P::Array{Any},N::Int64)
+function stoc_entropy(P::Array{Any},N::Int64=0)
   Id=reshape([1 0; 0 1],(1,1,2,2))
-  P=P/stoc_expect_val(P,(Id,1))[1]
+  P[1]=P[1]/stoc_expect_val(P,(Id,1))[1]
+  #P=P/stoc_expect_val(P,(Id,1))[1]
   L=size(P)[1]
   d=size(P[1])[3]
-  entropy=zeros(L-1,N)
+  entropy=zeros(L-1)
+
   for i=0:(L-2)
     prod_1=1
     prod_2=1
-    p_λ=zeros(size(P[L-i])[1])
+    D=size(P[L-i])[1]
+    p_λ=zeros(D)
+
     for j=1:L
       sum=0.
       for σ=1:d
@@ -493,19 +500,12 @@ function stoc_entropy(P::Array{Any},N::Int64)
         prod_2=*(prod_2,sum)
       end
     end
-    l=1
-    while l<=N
-      A=rand(size(P[L-i])[1],size(P[L-i])[1])
-      (U,S,V)=svd(A)
-      for k=1:size(P[L-i])[1]
-        p_λ[k]=*(prod_1,U[k,:],U[k,:]',prod_2)[1]
-      end
-      if minimum(p_λ)>0
-        for k=1:size(P[L-i])[1]
-          entropy[L-i-1,l]-=p_λ[k]*log(p_λ[k])
-        end
-        l+=1
-      end
+
+    for k=1:size(P[L-i])[1]
+      p_λ[k]=prod_1[k]*prod_2[k]
+    end
+    for k=1:size(P[L-i])[1]
+      entropy[L-i-1]-=p_λ[k]*log(p_λ[k])
     end
   end
   return minimum(entropy)
@@ -513,38 +513,38 @@ end
 
 
 
-function tMPS_variant(C, h, t::Float64, Δt::Float64, D::Int64=Inf)
-    N=div(t,Δt);
-    d=size(C[1])[3];
-
-    Op_1=complex(expm(h[2]*Δt/2.))
-    Op_2=complex(expm(h[2]*Δt))
-    #Op_1_1=complex(expm(-h[1]*Δt/2.))
-    #Op_1_l=complex(expm(-h[3]*Δt/2.))
-    Op_2_1=reshape(complex(expm(h[1]*Δt)),(1,1,2,2))
-    Op_2_l=reshape(complex(expm(h[3]*Δt)),(1,1,2,2))
-
-    L_uneven = ceil(Int64,(size(C)[1]-1)/2) #amount of uneven bonds
-    L_even = floor(Int64,(size(C)[1]-1)/2)  #amout of even bonds
-
-
-
-    #as Op_1 commutes with itself, if N>1 two consecutive steps with Op_1 can be combined
-    for i=1:N
-      C[1]=operator(C[1],Op_2_1)
-      C[L]=operator(C[L],Op_2_l)
-      #for j=1:L_uneven
-      #  (C[2*j-1],C[2*j])=operator_2bond(C[2*j-1],C[2*j],Op_1);
-      #end
-
-      for j=1:L_even
-        (C[2*j],C[2*j+1])=operator_2bond(C[2*j],C[2*j+1],Op_2);
-      end
-
-      for j=1:L_uneven
-        (C[2*j-1],C[2*j])=operator_2bond(C[2*j-1],C[2*j],Op_2);
-      end
-      compress(C,D,:R)
-      compress(C,D,:L)
+function R(n::Int,α,β)
+  b=0;
+  for i=1:n
+    k=i*factorial(BigInt(2n-1-i))/(factorial(BigInt(n))*factorial(BigInt(n-i)))
+    if α!=β
+      k*=(1/β^(i+1)-1/α^(i+1))/(1/β-1/α)
+    else
+      k*=(i+1)*1/β^(i)
     end
+    b+=k
+  end
+  return Float64(b)
+end
+
+function ASEP_density(i,L,α,β)
+  if i==L
+    density=1/β*R(L-1,α,β)/R(L,α,β)
+  else
+    aux_sum_1=0;
+    for j=0:L-i-1
+      aux_sum_1+=Float64(factorial(BigInt(2j))/(factorial(BigInt(j))*factorial(BigInt(j+1))))*R(L-j-1,α,β)
+    end
+    aux_sum_2=0;
+    for k=2:L-i+1
+      aux_sum_2+=(k-1)*Float64(factorial(BigInt(2(L-i)-k))/(factorial(BigInt(L-i-k+1))))*β^(-k)
+    end
+    if i==1
+      aux_sum_2*=1/Float64(factorial(BigInt(L-i)))
+    else
+      aux_sum_2*=R(i-1,α,β)/Float64(factorial(BigInt(L-i)))
+    end
+    density=(aux_sum_1+aux_sum_2)/R(L,α,β)
+  end
+  return density
 end

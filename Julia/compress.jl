@@ -236,3 +236,124 @@ function right_norm(B::Array{Float64}, M::Array{Float64}, D::Int64=Inf)
   end
   return (B[1:D_is,:,:],M2)
 end
+
+
+function stoc_compress(P,D_max)
+  for l=1:size(P)[1]-1
+    prod_1=1
+    prod_2=1
+    L=size(P)[1]
+    D=size(P[l])[2]
+    d=size(P[l])[3]
+
+    if l<=L/2
+      D_new=min(D_max,d^l)
+    elseif l==(L+1)/2
+      D_new=min(D_max,d^((L-1)/2))
+    else
+      D_new=min(D_max,d^(L-l))
+    end
+
+    p_λ=zeros(D)
+    significant=zeros(D_new)
+    B_1=P[l]
+    B_2=P[l+1]
+
+    for j=1:L
+      sum=0.
+      for σ=1:d
+        sum+=P[j][:,:,σ]
+      end
+      if j<=l
+        prod_1=*(prod_1,sum)
+      else
+        prod_2=*(prod_2,sum)
+      end
+    end
+    for k=1:D
+      p_λ[k]=prod_1[k]*prod_2[k]
+    end
+    println(p_λ)
+    for i=1:D_new
+      for j=1:D
+        if p_λ[j]==maximum(p_λ)
+          significant[i]=j
+          p_λ[j]=0.
+          break
+        end
+      end
+    end
+    sort(significant)
+    B_new1=zeros(size(B_1)[1],D_new,d)
+    B_new2=zeros(D_new,size(B_2)[2],d)
+    for i=1:D
+      for j=1:D_new
+        if i==significant[j]
+          for k=1:size(B_1)[1]
+            B_new1[k,j,:]=B_1[k,i,:]
+          end
+          for k=1:size(B_2)[2]
+            B_new2[j,k,:]=B_2[i,k,:]
+          end
+        end
+      end
+    end
+    P[l]=B_new1
+    P[l+1]=B_new2
+  end
+end
+
+
+
+function stoc_compress_indiv(P,l,D_new)
+  prod_1=1
+  prod_2=1
+  L=size(P)[1]
+  D=size(P[l])[2]
+  d=size(P[l])[3]
+  p_λ=zeros(D)
+  significant=zeros(D_new)
+  B_1=P[l]
+  B_2=P[l+1]
+
+  for j=1:L
+    sum=0.
+    for σ=1:d
+      sum+=P[j][:,:,σ]
+    end
+    if j<=l
+      prod_1=*(prod_1,sum)
+    else
+      prod_2=*(prod_2,sum)
+    end
+  end
+  for k=1:D
+    p_λ[k]=prod_1[k]*prod_2[k]
+  end
+  for i=1:D_new
+    for j=1:D
+      if p_λ[j]==maximum(p_λ)
+        significant[i]=j
+        p_λ[j]=0.
+        break
+      end
+    end
+  end
+  sort(significant)
+  B_new1=zeros(size(B_1)[1],D_new,d)
+  B_new2=zeros(D_new,size(B_2)[2],d)
+  for i=1:D
+    for j=1:D_new
+      if i==significant[j]
+        for k=1:size(B_1)[1]
+          B_new1[k,j,:]=B_1[k,i,:]
+        end
+        for k=1:size(B_2)[2]
+          B_new2[j,k,:]=B_2[i,k,:]
+        end
+      end
+    end
+  end
+  P[l]=B_new1
+  P[l+1]=B_new2
+end
