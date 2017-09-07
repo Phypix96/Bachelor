@@ -1,14 +1,14 @@
 include("time_evolve.jl")
 using Plots, LaTeXStrings
 
-L=10
-d=12
-t=100.
-Δt=0.5
-iter=4
+L=6
+d=8
+t=10.
+Δt=0.3
+iter=3
 
-α=0.5
-β=0.25
+α=0.2
+β=0.7
 p_left=0.0
 p_right=1.0
 
@@ -17,22 +17,24 @@ Ident=reshape([1. 0.; 0. 1.],(1,1,2,2))
 N=complex(N); Ident=complex(Ident)
 Right=Array{Any}(L)
 Left=Array{Any}(L)
-#den_MPS=zeros(41,41)
-#den_exp=zeros(41,41)
-#flow_MPS=zeros(37,37)
-#flow_exp=zeros(37,37)
-ent_entropy_MPS=zeros(41,41)
+
+ent_entropy_MPS=zeros(41,41,L-1)
+
 density=zeros(41,41,L)
 flow=zeros(41,41,L-1)
 density_prof=zeros(41,41,L)
 flow_prof=zeros(41,41)
-for α=0.0:0.025:1.
-  for β=0.0:0.025:1.
+
+
+for k=1:41
+  for l=1:41
+α=(k-1)/40
+β=(l-1)/40
 h1=[0 0 α 0; 0 -p_right p_left α; 0 p_right -p_left-α 0; 0 0 0 -α]
 h=[0 0 0 0; 0 -p_right p_left 0; 0 p_right -p_left 0; 0 0 0 0]
 hl=[-β 0 0 0; β -p_right p_left 0; 0 p_right -p_left-β 0; 0 0 β 0]
 
-(h1,h,hl)=(complex(h1),complex(h),complex(hl))
+#(h1,h,hl)=(complex(h1),complex(h),complex(hl))
 H=[h1,h,hl];
 Ht=[h1',h',hl']
 
@@ -42,15 +44,15 @@ Ht=[h1',h',hl']
 #density_prof=zeros(L)
 
 for i=1:L
-  Right[i]=complex(reshape([1/sqrt(2);1/sqrt(2)],(1,1,2))); Left[i]=complex(reshape([1/sqrt(2);1/sqrt(2)],(1,1,2)))
-  #Right[i]=reshape([0.0;1.0],(1,1,2))
+  #Right[i]=complex(reshape([1/sqrt(2);1/sqrt(2)],(1,1,2))); Left[i]=complex(reshape([1/sqrt(2);1/sqrt(2)],(1,1,2)))
+  Right[i]=reshape([0.5;0.5],(1,1,2))
   #Left[i]=reshape([0.0;1.0],(1,1,2))
 end
 
 for i=1:iter
   print(i,": ")
   tMPS(Right,H,t,Δt,d)
-  tMPS(Left,Ht,t,Δt,d)
+  #tMPS(Left,Ht,t,Δt,d)
   for j=1:L
     #density[i,j]=overlap(Left,Right,:real,(N,j))[1]/overlap(Left,Right,:real)[1]
     #density[i,j]=stoc_expect_val(Right,(N,j))[1]/stoc_expect_val(Right,(Ident,1))[1]
@@ -60,32 +62,27 @@ for i=1:iter
   end
 end
 
-tMPS(Right,H,float(L)*2,0.1,d)
-tMPS(Left,Ht,float(L)*2,0.1,d)
-#tMPS(Right,H,float(L)*0.5,0.05,d)
-#tMPS(Left,Ht,float(L)*0.5,0.05,d)
+#tMPS(Right,H,float(L)*3,0.1,d)
+#tMPS(Left,Ht,float(L)*3,0.1,d)
+#tMPS(Right,H,float(L)*0.25,0.025,d)
+#tMPS(Left,Ht,float(L)*0.25,0.025,d)
+tMPS(Right,H,float(L),0.2,d)
 for j=1:L
-  density[Int64(round((α-0.0)*40))+1, Int64(round((β-0.0)*40))+1,j]=overlap(Left,Right,:real,(N,j))[1]/overlap(Left,Right,:real,(Ident,1))[1]
-  #density[iter+1,j]=overlap(Left,Right,:real,(N,j))[1]/overlap(Left,Right,:real,(Ident,1))[1]
+  #density[k, l]=overlap(Left,Right,:real,(N,j))[1]/overlap(Left,Right,:real,(Ident,1))[1]
+  density[k,l,j]=stoc_expect_val(Right,(N,j))[1]/stoc_expect_val(Right,(Ident,1))[1]
   #density[iter+1,j]=stoc_expect_val(Right,(N,j))[1]/stoc_expect_val(Right,(Ident,1))[1]
-  density_prof[Int64(round((α-0.0)*40))+1, Int64(round((β-0.0)*40))+1,j]=ASEP_density(j,L,α,β)
+  density_prof[k, l,j]=ASEP_density(j,L,α,β)
   if j<L
-    flow[Int64(round((α-0.0)*40))+1, Int64(round((β-0.0)*40))+1,j]=overlap(Left,Right,:real,(N,j),(Ident-N,j+1))[1]/overlap(Left,Right,:real,(Ident,1))[1]
+    #flow[k,l,j]=overlap(Left,Right,:real,(N,j),(Ident-N,j+1))[1]/overlap(Left,Right,:real,(Ident,1))[1]
+    #ent_entropy_MPS[k,l,:]=entropy(Right)
+    flow[k,l,j]=stoc_expect_val(Right,(N,j),(Ident-N,j+1))[1]/stoc_expect_val(Right,(Ident,1))[1]
+    ent_entropy_MPS[k,l,:]=stoc_entropy(Right)
   end
 end
-ent_entropy_MPS[Int64(round((α-0.0)*40))+1, Int64(round((β-0.0)*40))+1]=entropy(Right)
-flow_prof[Int64(round((α-0.0)*40))+1, Int64(round((β-0.0)*40))+1]=R(L-1,α,β)/R(L,α,β)
+#(ent_entropy_MPS[Int64(round((α-0.0)*40))+1, Int64(round((β-0.0)*40))+1],max_ent_entropy_MPS[Int64(round((α-0.0)*40))+1, Int64(round((β-0.0)*40))+1])=entropy(Right)
 
-#den_MPS[Int64(round((α-0.1)*50))+1, Int64(round((β-0.1)*50))+1]=density[iter+1,3]#-(1/β*a/b)
-#den_exp[Int64(round((α-0.1)*50))+1, Int64(round((β-0.1)*50))+1]=(1/β*a/b)
-#flow_MPS[Int64(round((α-0.1)*10))+1, Int64(round((β-0.1)*10))+1]=overlap(Left,Right,:real,(N,10),(Ident-N,11))[1]/overlap(Left,Right,:real,(Ident,1))[1]
-#if α<0.5 && α<=β
-#  flow_exp[Int64(round((α-0.1)*10))+1, Int64(round((β-0.1)*10))+1]=α*(1-α)
-#elseif β<0.5 && β<α
-#  flow_exp[Int64(round((α-0.1)*10))+1, Int64(round((β-0.1)*10))+1]=β*(1-β)
-#elseif a>=0.5 && β>=0.5
-#  flow_exp[Int64(round((α-0.1)*10))+1, Int64(round((β-0.1)*10))+1]=0.25
-#end
+flow_prof[k,l]=R(L-1,α,β)/R(L,α,β)
+
 
 
 println(α," ",β)

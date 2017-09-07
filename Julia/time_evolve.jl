@@ -471,17 +471,20 @@ function entropy(C::Array{Any})
     end
     (C[L-i],C[L-i-1])=right_norm(C[L-i], C[L-i-1],20)
   end
-  return (minimum(entropy),maximum(entropy))
+  return entropy
 end
 
 
 function stoc_entropy(P::Array{Any},N::Int64=0)
   Id=reshape([1 0; 0 1],(1,1,2,2))
-  P[1]=P[1]/stoc_expect_val(P,(Id,1))[1]
-  #P=P/stoc_expect_val(P,(Id,1))[1]
+
   L=size(P)[1]
   d=size(P[1])[3]
   entropy=zeros(L-1)
+  norm=stoc_expect_val(P,(Id,1))[1]^(1/L)
+  for i=1:L
+    P[i]=P[i]/norm
+  end
 
   for i=0:(L-2)
     prod_1=1
@@ -508,7 +511,7 @@ function stoc_entropy(P::Array{Any},N::Int64=0)
       entropy[L-i-1]-=p_λ[k]*log(p_λ[k])
     end
   end
-  return minimum(entropy)
+  return entropy
 end
 
 
