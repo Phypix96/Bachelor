@@ -9,13 +9,13 @@
 \contentsline {chapter}{\numberline {2}Das ASEP-Modell}{10}
 \contentsline {section}{\numberline {2.1}Mathematische Beschreibung}{10}
 \contentsline {section}{\numberline {2.2}Analytische L\IeC {\"o}sung}{11}
-\contentsline {chapter}{\numberline {3}Implementierung}{14}
+\contentsline {chapter}{\numberline {3}Ergebnisse}{14}
 \contentsline {section}{\numberline {3.1}Implementierung im MPS-Formalismus}{14}
-\contentsline {section}{\numberline {3.2}Dichte-Verteilung und Fluss}{15}
+\contentsline {section}{\numberline {3.2}Fehler-Analyse der MPS- und sMPS-N\IeC {\"a}herung}{15}
 \contentsline {subsection}{\numberline {3.2.1}MPS}{15}
-\contentsline {subsection}{\numberline {3.2.2}sMPS}{17}
-\contentsline {chapter}{\numberline {4}Fazit}{21}
-\contentsline {chapter}{\numberline {5}Anhang}{22}
-\contentsline {section}{\numberline {5.1}Trotter-Zerlegung}{22}
-\contentsline {section}{\numberline {5.2}SVD und NMF}{22}
-\contentsline {section}{\numberline {5.3}Linearer Filter}{22}
+\contentsline {subsection}{\numberline {3.2.2}sMPS}{18}
+\contentsline {chapter}{\numberline {4}Fazit}{23}
+\contentsline {chapter}{\numberline {5}Anhang}{24}
+\contentsline {section}{\numberline {5.1}Trotter-Zerlegung}{24}
+\contentsline {section}{\numberline {5.2}SVD und NMF}{24}
+\contentsline {section}{\numberline {5.3}Linearer Filter}{24}

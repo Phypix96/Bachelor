@@ -18,6 +18,7 @@
 \usepackage{bbold}
 \usepackage{graphicx}
 \usepackage[caption = false]{subfig}
+\usepackage{commath}
 
 \newcommand{\SumIndex}{\sigma_1,\ldots,\sigma_L}
 \newcommand{\SumIndexTau}{\tau_1,\ldots,\tau_L}
@@ -36,21 +37,22 @@
 \chapter{Matrix-Produkt Zustände}\label{MPS_chapter}
 
 
+
 \todo{Absatz umschreiben, um MPS zu motivieren}
-Man betrachte ein System aus $L$ Teilchen an festen Positionen. Jedes dieser Teilchen habe einen lokalen Konfigurationsraum mit Dimension $d$. Es kann nun jeder Zustand geschrieben werden als 
+Man betrachte ein Gitter bestehend aus $L$ Teilchen. Jedes dieser Teilchen habe einen lokalen Konfigurationsraum mit Dimension $d$. Es kann nun jeder Zustand geschrieben werden als 
 \begin{equation}\label{psi_equ}
 |\psi\rangle=\sum_{\SumIndex} c_{\SumIndex}|\SumIndex\rangle
 \end{equation}
-Die Anzahl der nötigen Koeffizienten $c_{\sigma_1,\ldots,\sigma_L}$ steigt dabei mit $d^L$ an, also exponentiell mit der Anzahl der Teilchen in dem System. Für große Systeme macht dies Rechnungen mit den Zuständen über die Koeffizienten unöglich. Wie wir in Abschnitt \ref{compress} sehen werden, kann die Anzahl der benötigten Koeffizenten effizent reduziert werden, wenn man die Koeffizienten als Produkt von $L$ Matrizen darstellt.\cite{MPS-main}
+Die Anzahl der nötigen Koeffizienten $c_{\sigma_1,\ldots,\sigma_L}$ steigt dabei mit $d^L$ an, also exponentiell mit der Anzahl der Teilchen in dem System. Für große Systeme macht dies Rechnungen mit den Zuständen über die Koeffizienten unöglich. Wie wir in Abschnitt \ref{compress} sehen werden, kann die Anzahl der benötigten Koeffizenten effizent reduziert werden, wenn man die Koeffizienten als Produkt von $L$ Matrizen darstellt \cite{MPS-main}.
 \begin{equation}\label{MPS_form_equ}
-c_{\SumIndex}=A^{\sigma_1}A^{\sigma_2}\ldots A^{\sigma_{L-1}}A^{\sigma_L}
+c_{\SumIndex}=A^{\sigma_1}A^{\sigma_2}\cdots A^{\sigma_{L-1}}A^{\sigma_L}
 \end{equation}
-Man spricht hierbei von einem Matrix-Produkt Zustand (MPS).\footnote{Abkürzung der englischen Bezeichung \textit{Matrix-Product State}}
-Es soll daher zunächst gezeigt werden, wie ein allgemeiner Zustand in die Form \ref{MPS_form_equ} gebracht werden kann.
+Man spricht hierbei von einem Matrix-Produkt Zustand (MPS)\footnote{Abkürzung der englischen Bezeichung \textit{Matrix-Product State}}.
+Es soll daher zunächst gezeigt werden, wie ein allgemeiner Zustand in die Form von Gleichung\ref{MPS_form_equ} gebracht werden kann.
 \section{Konstruktion eines MPS}\label{construction}
 
 
-Dafür werden, wie in Gleichung \ref{MPS_constr_equ} ausgeführt, die Koeffizienten in einen $(d\times d^{L-1})$ Vektor umgeschrieben Dieser wird anschließend mit einer Singulärwertzerlegung in das Produkt dreier Matrizen $USV^{\prime}$ aufgeteilt. Zuletzt wird die $(d\times d)$ Matrix $U$ in $d$ $(1\times d)$ Matrizen $A^{\sigma_i}$ aufgeteilt. 
+Dafür werden, wie in Gleichung \ref{MPS_constr_equ} ausgeführt, die Koeffizienten in eine $(d\times d^{L-1})$ Matrix umgeschrieben. Dieser wird anschließend mit einer Singulärwertzerlegung in das Produkt dreier Matrizen $USV^{\prime}$ aufgeteilt. Zuletzt wird die $(d\times d)$ Matrix $U$ in $d$ $(1\times d)$ Matrizen $A^{\sigma_i}$ aufgeteilt. 
 \begin{equation}
 \label{MPS_constr_equ}
 \begin{split}
@@ -62,7 +64,7 @@ Im nächsten Schritt wird $\tilde{c}$ zu einer $(d^2 \times d^{L-2})$ Matrix umg
 \begin{equation}
 \label{MPS_fin_equ}
 \begin{split}
-c_{\SumIndex}&=\sum_{a_1}\sum_{a_2}A_{1,a_1}^{\sigma_1}U_{(a_1 \sigma_2),a_2}S_{a_2,a_2}V_{a_2,(\sigma_3,\ldots,\sigma_L)}^\dagger\\
+c_{\SumIndex}&=\sum_{a_1}\sum_{a_2}A_{1,a_1}^{\sigma_1}U_{(a_1,\sigma_2),a_2}S_{a_2,a_2}V_{a_2,(\sigma_3,\ldots,\sigma_L)}^\dagger\\
 &=\sum_{a_1}\sum_{a_2}A_{1,a_1}^{\sigma_1}A_{a_1,a_2}^{\sigma_2}\Psi_{(a_2,\sigma_3),(\sigma_4,\ldots,\sigma_L)}\\
 &=\ldots=\sum_{a_1,\ldots,a_{L-1}}A_{1,a_1}^{\sigma_1}A_{a_1,a_2}^{\sigma_2}\ldots A_{a_{L-2},a_{L-1}}^{\sigma_{L-1}}A_{a_{L-1},1}^{\sigma_L}
 \end{split}
@@ -72,24 +74,24 @@ Es ist anzumerken, dass es sich bei den Matrizen $A^{\sigma_i}$ und $A^{\sigma_j
 
 Da die in Gleichung \ref{MPS_fin_equ} auftretenden Summen als Matrixmultiplikationen aufgefasst werden können, liegen die Koeffizienten nun in der Form aus Gleichung \ref{MPS_form_equ} vor. 
 
-Die Matrizen $A$ erfüllen aufgrund ihrer Konstruktion einige spezielle Eigenschaften. Da die $U$ Matrizen der Singulärwertzerlegung links-normalisiert sind\footnote{D.h. $U^\dagger U=\mathbb{1}$}, gilt für alle Matrizen $A^{\sigma_i}$, dass\footnote{Im weiteren Text wird auch ein Satz Matrizen $A^{\sigma_i}$ der diese Eigenschaft erfüllt lins-normalisiert genannt}\todo{Mit Schollwöck klären}
+Die Matrizen $A^{\sigma_i}$ erfüllen aufgrund ihrer Konstruktion einige spezielle Eigenschaften. Da die $U$ Matrizen der Singulärwertzerlegung links-normalisiert sind\footnote{D.h. $U^\dagger U=\mathbb{1}$}, gilt für alle Matrizen $A^{\sigma_i}$, dass\footnote{Im weiteren Text wird auch ein Satz Matrizen $A^{\sigma_i}$, der diese Eigenschaft erfüllt links-normalisiert genannt.}\todo{Kann ich das so nennen?}
 \begin{equation}
-\sum_{\sigma_i}A^{\sigma_i \dagger}A^{\sigma_i}=\mathbb{1}
+\sum_{\sigma_i}(A^{\sigma_i})^{\dagger}A^{\sigma_i}=\mathbb{1}
 \end{equation}
 
-Weiters ist die Dimension der einzelnen Matrizen durch ihre Konstruktion fest bestimmt. Diese sind für $A^{\sigma_1}\ldots A^{\sigma_L}$ gegeben durch $(1\times d)(d\times d^2)\ldots(d^2\times d)(d\times 1)$. Für eine gerade Anzahl an Teilchen haben die beiden innersten Matrizen Dimension $(d^{\frac{L}{2}-1}\times d^{\frac{L}{2}})(d^{\frac{L}{2}}\times d^{\frac{L}{2}-1})$, während für eine ungerade Anzahl die innerste Matrix Dimension $(d^{\frac{L-1}{2}}\times d^{\frac{L-1}{2}})$ hat.\\
+Weiters ist die Dimension der einzelnen Matrizen durch ihre Konstruktion fest bestimmt. Diese sind für $A^{\sigma_1}\cdots A^{\sigma_L}$ gegeben durch $(1\times d)(d\times d^2)\ldots(d^2\times d)(d\times 1)$. Für eine gerade Anzahl an Teilchen haben die beiden innersten Matrizen Dimension $(d^{\frac{L}{2}-1}\times d^{\frac{L}{2}})(d^{\frac{L}{2}}\times d^{\frac{L}{2}-1})$, während für eine ungerade Anzahl die innerste Matrix Dimension $(d^{\frac{L-1}{2}}\times d^{\frac{L-1}{2}})$ hat.\\
 
-Es ist anzumerken, dass dies nur eine mögliche Konstruktion eines MPS ist. Alternativ kann die Zerlegung von $c$ auch bei dem letzten Koeffizienten begonnen werden. Man spricht von einem rechts-kanonischen MPS. Wenn bis zu einer Position $l<L$ eine links-kanonische, und von da an rechts-kanonische Zerlegung vorgenommen wird, ist von einem gemischt-kanonischen MPS die Rede. In diesem Fall erhält man einen MPS der Form
+Es ist zu beachten, dass dies nur eine mögliche Konstruktion eines MPS ist. Alternativ kann die Zerlegung von $c$ auch bei dem letzten Koeffizienten begonnen werden. Man spricht von einem rechts-kanonischen MPS. Wenn bis zu einer Position $l<L$ eine links-kanonische, und von da an rechts-kanonische Zerlegung vorgenommen wird, ist von einem gemischt-kanonischen MPS die Rede. In diesem Fall erhält man einen MPS der Form
 \begin{equation}
-|\psi\rangle=\sum_{\SumIndex}A^{\sigma_1}\ldots A^{\sigma_l}S B^{\sigma_{l+1}}\ldots B^{\sigma_L}|\bm{\sigma}\rangle
+|\psi\rangle=\sum_{\SumIndex}A^{\sigma_1}\cdots A^{\sigma_l}S B^{\sigma_{l+1}}\cdots B^{\sigma_L}|\bm{\sigma}\rangle
 \end{equation}
-$S$ ist dabei eine Diagonalmatrix, alle A Matrizen sind links-orthogonal und alle B Matrizen rechts-orthogonal.
+$S$ ist dabei eine Diagonalmatrix, alle Matrizen $A$ links-orthogonal und alle Matrizen $B$ rechts-orthogonal sind.
 
-Für viele Anwendungen ist es nötig, einen Zustand als eine Schmidt-Zerlegung darzustellen (vgl. \ref{compress},\ref{information_entropy}). Darunter versteht man eine Faktorisierung des Systems in zwei Untersysteme $A$ und $B$. Die Basis muss dazu aufgeteilt werden in das Tensorprodukt von zwei Basen, welche den Vektorraum von $A$ und $B$ aufspannen, also $|\psi\rangle=\sum_i c_i|\phi_i\rangle_A\otimes|\varphi_i\rangle_B$. Aus der gemischt-kanonischen Zerlegung kann einfach eine solche Schmidt-Zerlegung des Zustandes konstruiert werden. Dazu führt man folgende neue Vektoren ein:
+Für viele Anwendungen ist es nötig, einen Zustand als eine Schmidt-Zerlegung darzustellen (vgl. \ref{compress}, \ref{information_entropy}). Darunter versteht man eine Faktorisierung des Systems in zwei Untersysteme $A$ und $B$. Die Basis muss dazu in das Tensorprodukt  von zwei Basen aufgeteilt werden, welche den Vektorraum von $A$ und $B$ aufspannen, also $|\psi\rangle=\sum_i c_i|\phi_i\rangle_A\otimes|\varphi_i\rangle_B$. Aus der gemischt-kanonischen Zerlegung kann einfach eine solche Schmidt-Zerlegung des Zustandes konstruiert werden. Dazu führt man folgende neue Vektoren ein:
 \begin{equation}
 \begin{split}
-|a_l\rangle_A&=\sum_{\SumIndex}(A^{\sigma_1}\ldots A^{\sigma_l})_{1,a_l}|\sigma_1\ldots\sigma_l\rangle \\
-|a_l\rangle_B&=\sum_{\SumIndex}(B^{\sigma_{l+1}}\ldots B^{\sigma_L})_{a_l,1}|\sigma_{l+1}\ldots\sigma_L\rangle\\
+|a_l\rangle_A&=\sum_{\SumIndex}\left( A^{\sigma_1}\cdots A^{\sigma_l}\right)_{1,a_l}|\sigma_1\ldots\sigma_l\rangle \\
+|a_l\rangle_B&=\sum_{\SumIndex}\left(B^{\sigma_{l+1}}\cdots B^{\sigma_L}\right)_{a_l,1}|\sigma_{l+1}\ldots\sigma_L\rangle\\
 \end{split}
 \end{equation}
 Da diese Vektoren aufgrund ihrer Konstruktion eine Orthogonalbasis bilden, lässt sich der Zustand $|\psi\rangle$ schreiben als
@@ -98,16 +100,16 @@ Da diese Vektoren aufgrund ihrer Konstruktion eine Orthogonalbasis bilden, läss
 \end{equation}
 
 \section{Kompression eines MPS}\label{compress}
-Die Zerlegung eines Zustands in einen MPS bringt im Allgemeinen noch keinen numerischen Vorteil, da die Matrizengröße erneut exponentiell steigt. Es ist also nötig, die Dimension der Matrizen signifikant zu reduzieren, und dabei einen möglichst kleinen Fehler in den Koeffizienten $c$ zu machen. Der einfachste Weg, dies zu machen führt erneut über die Singulärwertzerlegung.\\
+Die Zerlegung eines Zustands in einen MPS bringt im Allgemeinen noch keinen numerischen Vorteil, da die Matrizengröße erneut exponentiell steigt. Es ist also nötig, die Dimension der Matrizen signifikant zu reduzieren, und dabei den Fehler in den Koeffizienten $c$ möglichst klein zu halten. Der einfachste Weg, dies zu erreichen führt erneut über die Singulärwertzerlegung.\\
 
 
-Wir betrachten einen gemischt-kanonischen MPS mit der Diagonalmatrix $S$ an Position $l$. Wie in Abschnitt \ref{construction} gezeigt, lässt sich aus dieser Form die Schmidt-Zerlegung $|\psi\rangle=\sum_{a_l=1}^{D^{\prime}} S_{a_l,a_l}|a_l\rangle_A|a_l\rangle_B$ des Zustandes ablesen. Dabei ist $D^\prime$ die Dimension der Diagonalmatrix. Ziel ist es nun, diese Dimension auf $D<D^\prime$ zu reduzieren, während die 2-Norm des Zustandes möglichst unverändert bleiben soll.
+Wir betrachten einen gemischt-kanonischen MPS mit der Diagonalmatrix $S$ an der Position $l$. Wie in Abschnitt \ref{construction} gezeigt, lässt sich aus dieser Form die Schmidt-Zerlegung $|\psi\rangle=\sum_{a_l=1}^{D^{\prime}} S_{a_l,a_l}|a_l\rangle_A|a_l\rangle_B$ des Zustandes ablesen. Dabei ist $D^\prime$ die Dimension der Diagonalmatrix. Ziel ist es nun, diese Dimension auf $D<D^\prime$ zu reduzieren, während die 2-Norm des Zustandes möglichst unverändert bleiben soll.
 Die einfachste Art dies zu erreichen ist, die Summe auf die $D$ größten Einträge zu beschränken.
 
 
-Diese Kompression kann einfach auf den MPS Formalismus übertragen werden, indem von der Matrix $A^{\sigma_l}$ nur die ersten $D$ Spalten, von $B^{\sigma_{l+1}}$ die ersten $D$ Zeilen und von $S$ die ersten $D$ Zeilen und Spalten behalten werden.\footnote{Es wird vorausgesetzt, dass die Einträge in $S$ nach ihrer Größe sortiert sind} Es ist zu beachten, dass dabei die Norm des Zustandes nicht erhalten bleibt.\\
+Diese Kompression kann einfach auf den MPS-Formalismus übertragen werden, indem von der Matrix $A^{\sigma_l}$ nur die ersten $D$ Spalten, von $B^{\sigma_{l+1}}$ die ersten $D$ Zeilen und von $S$ die ersten $D$ Zeilen und Spalten behalten werden\footnote{Es wird vorausgesetzt, dass die Einträge in $S$ nach ihrer Größe sortiert sind}. Es ist zu beachten, dass dabei die Norm des Zustandes nicht erhalten bleibt.\\
 
-Um diese Dimensionsreduktion für die Matrizen $A^{\sigma_l}$ und $B^{\sigma_{l+1}}$ durchzuführen wurde vorausgesetzt, dass eine Schmidt-Zerlegung des System vorliegen an dem Gitterplatz $l$ vorliegt. Um für den gesamten MPS die maximale Dimension der Matrizen auf $D$ zu reduzieren, muss daher für jedes $l$ diese Zerlegung \ref{MPS_Schmidt_equ} vorgenommen werden. Dafür nehme man im Folgenden an, es liegt ein links-kanonischer MPS vor.\footnote{Dies stellt kein Einschränkung da, da jeder Zustand in einen links-kanonischen umgeschrieben werden kann \cite[Seite~129]{MPS-main}} Zunächst werden die Matrizen $A^{\sigma_L}$ zu einer Matrix zusammengefasst, indem der Index $\sigma_L$ mit dem Spalten-Index zusammengefasst wird.
+Um diese Dimensionsreduktion für die Matrizen $A^{\sigma_l}$ und $B^{\sigma_{l+1}}$ durchzuführen, wurde vorausgesetzt, dass eine Schmidt-Zerlegung des Systems an dem Gitterplatz $l$ vorliegt. Um für den gesamten MPS die maximale Dimension der Matrizen auf $D$ zu reduzieren, muss daher für jedes $l$ diese Zerlegung aus Gleichung \ref{MPS_Schmidt_equ} vorgenommen werden. Dafür gehe man im Folgenden davon aus, dass ein links-kanonischer MPS vorliegt\footnote{Dies stellt keine Einschränkung dar, da jeder Zustand in einen links-kanonischen Zustand umgeschrieben werden kann \cite[Seite~129]{MPS-main}.}. Zunächst werden die Matrizen $A^{\sigma_L}$ zu einer Matrix zusammengefasst, indem der Index $\sigma_L$ mit dem Spalten-Index zusammengefasst wird.
 
 \begin{equation}
 A_{a_{i-1},a_i}^{\sigma_i}\rightarrow A_{a_{i-1},(\sigma_i,a_i)}
@@ -127,57 +129,57 @@ Es können nun die Matrizen $U$, $S$ und $B^{\sigma_L}$, wie zuvor beschrieben, 
 
 In \cite{MPS_error} wurde gezeigt, dass der bei dieser Kompression auftretende Fehler beschränkt ist durch
 \begin{equation}
-||\,|\psi\rangle-|\psi_{\text{trunc}}\rangle||_2^2\leq 2\sum_{i=1}^{L}\epsilon_i(D)
+\lVert|\psi\rangle-|\psi_{\text{trunc}}\rangle\rVert_2^2\leq 2\sum_{i=1}^{L}\epsilon_i(D)
 \end{equation}
 Dabei ist $\epsilon_i=\sum_{a_i=D+1}^{D^{\prime}}S_{a_i,a_i}^2$ die Summe über alle bei der Näherung ignorierten Singulärwerte zum Quadrat. Diese können allerdings auch als Eigenwerte des reduzierten Dichteoperators $\rho_A$ oder $\rho_B$ aufgefasst werden, da gilt
 \begin{equation}
 \rho_A=\text{Tr}_B(|\psi\rangle\langle\psi|)=\sum_{a_l,a_l^{\prime}}S_{a_l,a_l}S_{a_l^{\prime},a_l^{\prime}}^{\ast}|a_l\rangle_A\langle a_l^{\prime}|_A
 \end{equation}
-Dieser Fehler ist also klein, wenn das Eigenwert-Spektrum des reduzierten Dichteoperators schnell genug abfällt, um ab dem Element D keinen signifikanten Betrag zu leisten. Auch wenn dies für allgemeine Quantenzustände nicht der Fall ist, gilt es für die Grundzustände von Systemen, die ein Flächen-Gesetzt erfüllen. Damit ist gemeint, dass die Entropie des Systems nicht mit dessen Volumen, sondern Oberfläche skaliert.\cite{Area_law}\\
+$\text{Tr}_B$ bezeichnet dabei die Spur über das Teilsystem $B$. Dieser Fehler ist also klein, wenn das Eigenwert-Spektrum des reduzierten Dichteoperators schnell genug abfällt, um ab dem Element $D$ keinen signifikanten Beitrag zu leisten. Auch wenn dies für allgemeine Quantenzustände nicht der Fall ist, gilt es für die Grundzustände von Systemen, die ein Flächen-Gesetz erfüllen. Damit ist gemeint, dass die Entropie des Systems nicht mit dessen Volumen, sondern Oberfläche skaliert \cite{Area_law}.\\
 
 
-Dieser Algorithmus kann auch von einem rechts-kanonischen Zustand aus begonnen werden. Dafür werden die Matrizen von links nach rechts komprimiert, und die einzelnen Matrizen $B^{\sigma_i}$ werden über den Zeilenindex zusammen gefasst.
+Dieser Algorithmus kann auch von einem rechts-kanonischen Zustand aus begonnen werden. Dafür werden die Matrizen von links nach rechts komprimiert und die einzelnen Matrizen $B^{\sigma_i}$ werden über den Zeilenindex zusammengefasst.
 
 \begin{equation}
-B_{a_{i-1},a_{i}}^{\sigma_i}\rightarrow B_{(\sigma_i a_{i-1}),a_i}
+B_{a_{i-1},a_{i}}^{\sigma_i}\rightarrow B_{(\sigma_i,a_{i-1}),a_i}
 \end{equation}
-Ansonsten kann analog zu \ref{compression_equ} vorgegangen werden.
+Ansonsten kann analog zu Gleichung \ref{compression_equ} vorgegangen werden.
 
-Diese Kompression ist nicht optimal und kann für $D\ll D^\prime$ sehr langsam werden. Weiters ist es im Allgemeinen nötig, den MPS zunächst in eine kanonische Form zu bringen. Es ist alternativ auch möglich, den MPS durch eine iterative Suche nach jener trunkierten Matrix zu komprimieren, die den 2-Norm Abstand zu dem ursprünglichen MPS minimiert. Während diese Methode zwar optimal ist, stellt auch hier Geschwindigkeit ein Problem dar, wenn der erste Iterationsschritt zufällig gewählt wird.
+Diese Kompression ist nicht optimal und kann für $D\ll D^\prime$ sehr langsam werden. Weiters ist es im Allgemeinen nötig, den MPS zunächst in eine kanonische Form zu bringen. Es ist alternativ auch möglich, den MPS durch eine iterative Suche nach jener trunkierten Matrix zu komprimieren, die den 2-Norm Abstand zu dem ursprünglichen MPS minimiert. Während diese Methode zwar den Fehler minimiert, stellt auch hier Geschwindigkeit ein Problem dar, wenn der erste Iterationsschritt zufällig gewählt wird \cite{MPS-main}.
 
 \section{Überlapp und Erwartungswerte}\label{MPO}
 Um den Überlapp von zwei Zuständen $|\phi\rangle$ und $|\psi\rangle$ zu berechnen, ist es zuerst nötig, den dualen Zustand durch Matrizen darstellen zu können. Aus der Zerlegung der Koeffizienten in Matrix-Produkte folgt dann
 \begin{equation}
 \begin{split}
-\langle\phi|&=\sum_{\SumIndex}c_{\SumIndex}^{\ast}\langle\SumIndex|=\sum_{\SumIndex} A^{\sigma_1\ast}\ldots A^{\sigma_L \ast}\langle\SumIndex|\\
- &= \sum_{\SumIndex}A^{\sigma_L\dagger}\ldots A^{\sigma_1 \dagger}\langle\SumIndex|
+\langle\phi|&=\sum_{\SumIndex}c_{\SumIndex}^{\ast}\langle\SumIndex|=\sum_{\SumIndex} A^{\sigma_1\ast}\cdots A^{\sigma_L \ast}\langle\SumIndex|\\
+ &= \sum_{\SumIndex}A^{\sigma_L\dagger}\cdots A^{\sigma_1 \dagger}\langle\SumIndex|
 \end{split}
 \end{equation}
 Damit ergibt sich $\langle\phi|\psi\rangle$ zu 
 \begin{equation}
-\langle\phi|\psi\rangle=\sum_{\bm{\sigma}}\tilde{A}^{\sigma_L \dagger}\ldots\tilde{A}^{\sigma_1 \dagger} A^{\sigma_1}\ldots A^{\sigma_L} 
+\langle\phi|\psi\rangle=\sum_{\bm{\sigma}}\tilde{A}^{\sigma_L \dagger}\cdots\tilde{A}^{\sigma_1 \dagger} A^{\sigma_1}\cdots A^{\sigma_L} 
 \end{equation}
-Das direkte Berechnen dieser Summe ist für große Systeme in der Praxis nicht möglich. Allerdings kann der Rechenaufwand drastisch reduziert werden, indem die Summen umsortiert werden. Da nach dem Multiplizieren von $\tilde{A}^{\sigma_1\dagger}$ und $A^{\sigma_1}$ keiner der Terme mehr von $\sigma_1$ abhängt, kann diese Summe vorgezogen werden. Dasselbe kann im Anschluss für $\sigma_2$ usw. gemacht werden, und so ergibt sich für den Überlapp von zwei Zuständen $|\phi\rangle$ und $\|\psi\rangle$
+Das direkte Berechnen dieser Summe ist für große Systeme in der Praxis nicht möglich. Allerdings kann der Rechenaufwand drastisch reduziert werden, indem die Summen umsortiert werden. Da nach dem Multiplizieren von $\tilde{A}^{\sigma_1\dagger}$ und $A^{\sigma_1}$ keiner der Terme mehr von $\sigma_1$ abhängt, kann diese Summe vorgezogen werden. Dasselbe kann im Anschluss für $\sigma_2$ usw. gemacht werden, und so ergibt sich für den Überlapp von zwei Zuständen $|\phi\rangle$ und $|\psi\rangle$
 \begin{equation}
-\langle\phi|\psi\rangle=\sum_{\sigma_L}\tilde{A}^{\sigma_L\dagger}(\ldots(\sum_{\sigma_2}\tilde{A}^{\sigma_2\dagger}(\sum_{\sigma_1}\tilde{A}^{\sigma_1\dagger}A^{\sigma_1})A^{\sigma_2})\ldots)A^{\sigma_L}
+\langle\phi|\psi\rangle=\sum_{\sigma_L}\tilde{A}^{\sigma_L\dagger}\left( \cdots\left(\sum_{\sigma_2}\tilde{A}^{\sigma_2\dagger}\left(\sum_{\sigma_1}\tilde{A}^{\sigma_1\dagger}A^{\sigma_1}\right)A^{\sigma_2}\right)\cdots\right) A^{\sigma_L}
 \end{equation}
-Auf dies Art kann der Rechenaufwand von $O(LD^3d^L)$ auf $O(LD^3d)$ reduziert werden.\\
+Auf diese Art kann der Rechenaufwand von $\mathcal{O}(LD^3d^L)$ auf $\mathcal{O}(LD^3d)$ reduziert werden.\\
 
-Um Erwartungswerte berechnen zu können, ist es weiters nötig, die Wirkung eines Operators auf einen MPS zu untersuchen. Dafür ist eine Beschreibung des Operators im MPS Formalismus nötig, es wird von einem Matrix-Produkt Operator (MPO) gesprochen. Da die Koeffizienten eines MPO erneut als Produkt von Matrizen geschrieben werden können\todo{Quellen aus Schollwöck nachschlagen}, ergibt sich für den Operator
+Um Erwartungswerte berechnen zu können, ist es weiters nötig, die Wirkung eines Operators auf einen MPS zu untersuchen. Dafür ist eine Beschreibung des Operators im MPS Formalismus nötig, es wird von einem Matrix-Produkt Operator (MPO) gesprochen. Da die Koeffizienten eines MPO erneut als Produkt von Matrizen geschrieben werden können \cite{MPS-main}, ergibt sich für den Operator
 \begin{equation}
-\hat{O}=\sum_{\bm{\sigma},\bm{\sigma^\prime}}W^{\sigma_1,\sigma_1^\prime}\ldots W^{\sigma_L,\sigma_L^\prime} |\bm{\sigma}\rangle\langle\bm{\sigma^\prime}|
+\hat{O}=\sum_{\bm{\sigma},\bm{\sigma}^{\prime}}W^{\sigma_1,\sigma_1^{\prime}}\cdots W^{\sigma_L,\sigma_L^{\prime}} |\bm{\sigma}\rangle\langle\bm{\sigma}^{\prime}|
 \end{equation}
 
 Im Folgenden wollen wir den Effekt eines Operators auf einen MPS untersuchen. Ziel ist es, das Ergebnis erneut als MPS darstellen zu können, da dies das einfache Berechnen von Erwartungswerten ermöglicht.
 
 \begin{equation}\label{MPO_MPS_equ}
 \begin{split}
-\hat{O}|\phi\rangle & = \sum_{\bm{\sigma},\bm{\sigma^\prime}}\sum_{\bm{a},\bm{b}}(W_{1,b_1}^{\sigma_1,\sigma_1^\prime}\ldots W_{b_L,1}^{\sigma_L,\sigma_L^\prime})(A_{1,a_1}^{\sigma_1}\ldots A_{a_L,1}^{\sigma_L})|\bm{\sigma}\rangle \\
-& =\sum_{\bm{\sigma},\bm{\sigma^\prime}}\sum_{\bm{a},\bm{b}}(W_{1,b_1}^{\sigma_1,\sigma_1^\prime}A_{1,a_1}^{\sigma_1^\prime})(W_{b_1,b_2}^{\sigma_2,\sigma_2^\prime}A_{a_1,a_2}^{\sigma_2^\prime})\ldots(W_{b_{L-1},1}^{\sigma_L,\sigma_L^\prime}A_{a_{L-1},1}^{\sigma_L^\prime})|\bm{\sigma}\rangle \\
+\hat{O}|\phi\rangle & = \sum_{\bm{\sigma},\bm{\sigma}^{\prime}}\sum_{\bm{a},\bm{b}}\left( W_{1,b_1}^{\sigma_1,\sigma_1^\prime}\cdots W_{b_L,1}^{\sigma_L,\sigma_L^\prime}\right) \left( A_{1,a_1}^{\sigma_1}\cdots A_{a_L,1}^{\sigma_L}\right) |\bm{\sigma}\rangle \\
+& =\sum_{\bm{\sigma},\bm{\sigma}^{\prime}}\sum_{\bm{a},\bm{b}}\left( W_{1,b_1}^{\sigma_1,\sigma_1^\prime}A_{1,a_1}^{\sigma_1^\prime}\right)\left( W_{b_1,b_2}^{\sigma_2,\sigma_2^\prime}A_{a_1,a_2}^{\sigma_2^\prime}\right)\cdots\left( W_{b_{L-1},1}^{\sigma_L,\sigma_L^\prime}A_{a_{L-1},1}^{\sigma_L^\prime}\right) |\bm{\sigma}\rangle \\
 &\equiv\sum_{\bm{\sigma}}\sum_{\bm{a},\bm{b}}N_{(1,1),(b_1,a_1)}^{\sigma_1}N_{(b_1,a_1),(b_2,a_2)}^{\sigma_2}\ldots N_{(b_{L-1},a_{L-1}),(1,1)}^{\sigma_L}|\bm{\sigma}\rangle \\
 \end{split}
 \end{equation}
-Es lässt sich im letzten Schritt erneut die MPS-Form des ursprünglichen Zustands erkennen. Die Größe der neuen Matrizen ist nun allerdings durch das Produkt der MPO- und MPS-Matrixdimenson gegeben. Zusammenfassend wird aus einer Matrix $A^{\sigma_i}$ unter Anwendung eines MPO eine neue Matrix $N^{\sigma_i}$ wie folgt:
+Im letzten Schritt lässt sich erneut die MPS-Form des ursprünglichen Zustands erkennen. Die Größe der neuen Matrizen ist nun allerdings durch das Produkt der MPO- und MPS-Matrixdimension gegeben. Zusammenfassend wird aus einer Matrix $A^{\sigma_i}$ unter Anwendung eines MPO eine neue Matrix $N^{\sigma_i}$ wie folgt:
 
 \begin{equation}
 N_{(b_{i-1},a_{i-1}),(b_i,a_i)}^{\sigma_i}=\sum_{\bm{\sigma_i^\prime}}W_{b_{i-1},b_i}^{\sigma_i\sigma_i^\prime}A_{a_{i-1},a_i}^{\sigma_i^\prime}
@@ -189,49 +191,49 @@ Damit ergibt sich der Erwartungswert eines Operators zu
 
 \section{Zeitentwicklung}\label{tMPS}
 
-Um die Dynamik eines MPS berechnen zu können, ist eine Beschreibung des Zeitentwicklungs-Operators $e^{-it\hat{H}t}$ als MPO nötig. Dies erfordert, dass der gesamte Operator als Matrix-Produkt geschrieben wird, in dem die Wirkung auf die einzelnen Gitterplätze völlig faktorisiert ist, also eine Matrix nur auf eine Position einwirkt. Im folgenden werden nur Interaktionen zwischen benachbarten Gitterplätzen behandelt, auch wenn weiter reichende Interaktionen prinzipiell beschrieben werden können.
+Um die Dynamik eines MPS berechnen zu können, ist eine Beschreibung des Zeitentwicklungs-Operators $e^{-i\hat{H}t}$ als MPO nötig. Dies erfordert, dass der gesamte Operator als Matrix-Produkt geschrieben wird, in dem die Wirkung auf die einzelnen Gitterplätze völlig faktorisiert ist, also eine Matrix nur auf eine Position einwirkt. Im Folgenden werden nur Interaktionen zwischen benachbarten Gitterplätzen behandelt, auch wenn weiter reichende Interaktionen prinzipiell beschrieben werden können.
 
-Führt man $\hat{h}_{i,i+1}$ als Wechselwirkungs-Hamiltonian zwischen den Teilchen an Positionen $i$ und $i+1$ ein, ergibt sich für den Gesamt-Hamiltionan
+Führt man $\hat{h}_{i,i+1}$ als Wechselwirkungs-Hamiltonian zwischen den Teilchen an den Positionen $i$ und $i+1$ ein, ergibt sich für den Gesamt-Hamiltionan
 \begin{equation}
 \hat{H}=\sum_{i=1}^{L-i}\hat{h}_{i,i+1}
 \end{equation}
 
-Betrachtet man nun einen kleinen Zeitschritt $\tau$, so kann mittels einer Trotter-Zerlegung 1. Ordnung der Zeitentwicklungs-Operator über diese Wechselwirkungs-Hamiltonians zerlegt werden zu\todo{Anhang Trotter-Zerlegung bis 2.Ordnung}
+Betrachtet man nun einen kleinen Zeitschritt $\tau$, so kann mittels einer Trotter-Zerlegung 1. Ordnung (vgl. Anhang \ref{trotter}) der Zeitentwicklungs-Operator über diese Wechselwirkungs-Hamiltonians zerlegt werden zu
 
 \begin{equation}\label{Trotter_equ}
-e^{-i\hat{H}\tau}= e^{-i\hat{h}_{1,2}\tau}e^{-i\hat{h}_{2,3}\tau}\ldots e^{-i\hat{h}_{L-1,L}\tau}+O(\tau^2)
+e^{-\text{i}\hat{H}\tau}= e^{-\text{i}\hat{h}_{1,2}\tau}e^{-\text{i}\hat{h}_{2,3}\tau}\cdots e^{-\text{i}\hat{h}_{L-1,L}\tau}+O(\tau^2)
 \end{equation}
 
-Der Fehler dieser Zerlegung rührt daher, dass die einzelnen Terme im Allgemeinen nicht kommutieren. Ein größeren Zeitschritt kann nun erreicht werden, indem mehrere dieser kurzen Schritte hintereinander durchgeführt werden. Der Fehler, der bei dieser Näherung gemacht wird geht gegen $0$, wenn $\tau$ gegen $0$ geht.
+Der Fehler dieser Zerlegung rührt daher, dass die einzelnen Terme im Allgemeinen nicht kommutieren. Ein größerer Zeitschritt kann nun erreicht werden, indem mehrere dieser kurzen Schritte hintereinander durchgeführt werden. Der Fehler, der bei dieser Näherung gemacht wird, geht gegen $0$, wenn $\tau$ gegen $0$ geht.
 
 Da in Gleichung \ref{Trotter_equ} jeder zweite Term kommutiert, kann diese in folgende Form umgeschrieben werden
 \begin{equation}
 \begin{split}
-e^{-i\hat{H}\tau}&=(e^{-i\hat{h}_{1,2}\tau}e^{-i\hat{h}_{3,4}\tau}\ldots)(e^{-i\hat{h}_{2,3}\tau}e^{-i\hat{h}_{4,5}\tau}\ldots)+O(\tau^2)\\
-&\equiv e^{-i\hat{H}_{\text{odd}}\tau}e^{-i\hat{H}_{\text{even}}\tau}+O(\tau^2)
+e^{-\text{i}\hat{H}\tau}&=(e^{-\text{i}\hat{h}_{1,2}\tau}e^{-\text{i}\hat{h}_{3,4}\tau}\ldots)(e^{-\text{i}\hat{h}_{2,3}\tau}e^{-\text{i}\hat{h}_{4,5}\tau}\ldots)+O(\tau^2)\\
+&\equiv e^{-\text{i}\hat{H}_{\text{odd}}\tau}e^{-\text{i}\hat{H}_{\text{even}}\tau}+O(\tau^2)
 \end{split}
 \end{equation}
 
-Diese Näherung kann weiter verbessern werden, indem eine Trotter-Zerlegung 2. Ordnung durchgeführt wird. Diese nimmt folgende Form an
+Es kann die Wirkung des Hamiltonian also aufgeteilt werden in die Wirkung auf Plätze mit geradem bzw. ungeradem Gitterplatz $i$. Diese Näherung kann weiter verbessern werden, indem eine Trotter-Zerlegung 2. Ordnung durchgeführt wird. Diese nimmt folgende Form an
 \begin{equation}
-e^{-i\hat{H}\tau}=e^{-i\hat{H}_{\text{odd}}\tau/2}e^{-i\hat{H}_{\text{even}}\tau}e^{-i\hat{H}_{\text{odd}}\tau/2}+O(\tau^3)
+e^{-\text{i}\hat{H}\tau}=e^{-\text{i}\hat{H}_{\text{odd}}\tau/2}e^{-\text{i}\hat{H}_{\text{even}}\tau}e^{-\text{i}\hat{H}_{\text{odd}}\tau/2}+O(\tau^3)
 \end{equation}
 
 Weitere Verbesserungen sind durch Zerlegungen höherer Ordnungen oder andere, weniger symmetrische Algorithmen möglich.
 
-Führt man nun mehrere dieser Zeitschritte hintereinander aus, kann der benötigte Rechenaufwand signifikant reduziert werden, indem ausgenutzt wird, dass $\hat{H}_{\text{odd}}$ mit sich selbst kommutiert und daher $e^{-i\hat{H}\frac{\tau}{2}}e^{-i\hat{H}\frac{\tau}{2}}=e^{-i\hat{H}\tau}$. Dadurch können der letzte und der erste Term zweier aufeinanderfolgender Trotter-Zerlegungen 2. Ordnung zu einem zusammengefasst werden ohne an Genauigkeit zu verlieren.\par
+Führt man nun mehrere dieser Zeitschritte hintereinander aus, kann der benötigte Rechenaufwand signifikant reduziert werden, indem ausgenutzt wird, dass $\hat{H}_{\text{odd}}$ mit sich selbst kommutiert und daher $e^{-\text{i}\hat{H}\frac{\tau}{2}}e^{-\text{i}\hat{H}\frac{\tau}{2}}=e^{-\text{i}\hat{H}\tau}$. Dadurch können der letzte und der erste Term zweier aufeinanderfolgender Trotter-Zerlegungen 2. Ordnung zu einem zusammengefasst werden ohne an Genauigkeit zu verlieren.\par
 
-In der aktuellen Form kann der Zeitentwicklungs-Operator jedoch noch nicht auf einen MPS angewandt werden. Dazu ist es zunächst nötig, diesen in einen MPO umzuformen, bei dem ein Operator nur auf eine Position wirkt. Dafür soll zunächst der Operator $e^{-i\hat{h}_{1,2}\tau}\equiv O$ betrachtet werden. Ziel ist es, diesen zu einem Produkt von 1-Teilchen Operatoren zu faktorisieren. Dafür wird zunächst die Basis des Operators $O$ von $(\sigma_1\sigma_2,\sigma_1^{\prime}\sigma_2^{\prime})$ zu $(\sigma_1\sigma_1^{\prime},\sigma_2\sigma_2^{\prime})$ umsortiert. Um dies in ein Matrix-Produkt zu zerlegen wird anschließend noch eine Singulärwert-Zerlegung durchgeführt. 
+In der aktuellen Form kann der Zeitentwicklungs-Operator jedoch noch nicht auf einen MPS angewandt werden. Dazu ist es zunächst nötig, diesen in einen MPO umzuformen, bei dem ein Operator nur auf eine Position wirkt. Dafür soll zunächst der Operator $e^{-\text{i}\hat{h}_{1,2}\tau}\equiv \hat{O}$ betrachtet werden. Ziel ist es, diesen zu einem Produkt von 1-Teilchen Operatoren zu faktorisieren. Dafür wird zunächst die Basis des Operators $\hat{O}$ von $(\sigma_1\sigma_2,\sigma_1^{\prime}\sigma_2^{\prime})$ zu $(\sigma_1\sigma_1^{\prime},\sigma_2\sigma_2^{\prime})$ umsortiert. Um dies in ein Matrix-Produkt zu zerlegen, wird anschließend noch eine Singulärwert-Zerlegung durchgeführt. 
 
 \begin{equation}
-O^{\sigma_1 \sigma_2,\sigma_1^\prime \sigma_2^\prime}=P_{(\sigma_1 \sigma_1^\prime),(\sigma_2 \sigma_2^\prime)}=\sum_k U_{(\sigma_1 \sigma_1^\prime),k}S_{k,k}V_{k,(\sigma_2 \sigma_2^\prime)}^\dagger\equiv\sum_k M_{1,k}^{\sigma_1 \sigma_1^\prime} \bar{M}_{k,1}^{\sigma_2 \sigma_2^\prime}
+\hat{O}^{\sigma_1 \sigma_2,\sigma_1^\prime \sigma_2^\prime}=P_{(\sigma_1 \sigma_1^\prime),(\sigma_2 \sigma_2^\prime)}=\sum_k U_{(\sigma_1 \sigma_1^\prime),k}S_{k,k}V_{k,(\sigma_2 \sigma_2^\prime)}^\dagger\equiv\sum_k M_{1,k}^{\sigma_1 \sigma_1^\prime} \bar{M}_{k,1}^{\sigma_2 \sigma_2^\prime}
 \end{equation}
 
-Es wurden hier die neuen Matrizen $M^{\sigma_1,\sigma_1^{\prime}}$ und $\bar{M}^{\sigma_2,\sigma_2^{\prime}}$ definiert. Diese sind definiert als $M_{1,k}^{\sigma_1,\sigma_1^{\prime}}=U_{(\sigma_1 \sigma_1^\prime),k}\sqrt{S_{k,k}}$ und $\bar{M}_{k,1}^{\sigma_2,\sigma_2^{\prime}}=\sqrt{S_{k,k}}V_{k,(\sigma_2 \sigma_2^\prime)}^\dagger$. Führt man diese Faktorisierung nun für jeden Operator in $e^{-i\hat{H}_{\text{odd}}\tau}$ und $e^{-i\hat{H}_{\text{even}}\tau}$ durch, erhält man\footnote{Die Identität ist hierbei gegeben als $\mathbb{1}_{1,1}^{\sigma,\sigma^{\prime}}=\delta_{\sigma,\sigma^{\prime}}$}
+Es wurden hier die neuen Matrizen $M^{\sigma_1,\sigma_1^{\prime}}$ und $\bar{M}^{\sigma_2,\sigma_2^{\prime}}$ definiert. Diese sind definiert als $M_{1,k}^{\sigma_1,\sigma_1^{\prime}}=U_{(\sigma_1 \sigma_1^\prime),k}\sqrt{S_{k,k}}$ und $\bar{M}_{k,1}^{\sigma_2,\sigma_2^{\prime}}=\sqrt{S_{k,k}}V_{k,(\sigma_2 \sigma_2^\prime)}^\dagger$. Führt man diese Faktorisierung nun für jeden Operator in $e^{-i\hat{H}_{\text{odd}}\tau}$ und $e^{-i\hat{H}_{\text{even}}\tau}$ durch, erhält man\footnote{Die Identität ist hierbei gegeben als $\mathbb{1}_{1,1}^{\sigma,\sigma^{\prime}}=\delta_{\sigma,\sigma^{\prime}}$.}
 \begin{equation}
 \begin{split}
-(e^{-i\hat{H}_{\text{odd}}\tau})^{\bm{\sigma},\bm{\sigma^\prime}}&=\sum_{\textbf{k}}M_{1,k_1}^{\sigma_1 \sigma_1^\prime} \bar{M}_{k_1,1}^{\sigma_2 \sigma_2^\prime}M_{1,k_2}^{\sigma_3 \sigma_3^\prime} \bar{M}_{k_2,1}^{\sigma_4 \sigma_4^\prime}\ldots\\
-(e^{-i\hat{H}_{\text{even}}\tau})^{\bm{\sigma},\bm{\sigma^\prime}}&=\sum_{\textbf{k}}\mathbb{1}_{1,1}^{\sigma_1 \sigma_1^\prime} M_{1,k_1}^{\sigma_2 \sigma_2^\prime}\bar{M}_{k_1,1}^{\sigma_3 \sigma_3^\prime} M_{1,k_2}^{\sigma_4 \sigma_4^\prime}\bar{M}_{k_2,1}^{\sigma_5 \sigma_5^\prime}\ldots\\
+(e^{-\text{i}\hat{H}_{\text{odd}}\tau})^{\bm{\sigma},\bm{\sigma^\prime}}&=\sum_{\bm{k}}M_{1,k_1}^{\sigma_1 \sigma_1^\prime} \bar{M}_{k_1,1}^{\sigma_2 \sigma_2^\prime}M_{1,k_2}^{\sigma_3 \sigma_3^\prime} \bar{M}_{k_2,1}^{\sigma_4 \sigma_4^\prime}\ldots\\
+(e^{-\text{i}\hat{H}_{\text{even}}\tau})^{\bm{\sigma},\bm{\sigma^\prime}}&=\sum_{\bm{k}}\mathbb{1}_{1,1}^{\sigma_1 \sigma_1^\prime} M_{1,k_1}^{\sigma_2 \sigma_2^\prime}\bar{M}_{k_1,1}^{\sigma_3 \sigma_3^\prime} M_{1,k_2}^{\sigma_4 \sigma_4^\prime}\bar{M}_{k_2,1}^{\sigma_5 \sigma_5^\prime}\ldots\\
 \end{split}
 \end{equation}
 Dieser MPO kann nun, wie in Abschnitt \ref{MPO} erläutert, auf den MPS angewandt werden.
@@ -244,22 +246,22 @@ In in diesem Kapitel wurde bereits behandelt, wie ein quantenmechanischer Zustan
 
 Da es sich um Wahrscheinlichkeiten handelt, normiert man einen solchen Zustand über die $\text{L}_1$-Norm, also $\sum_{\bm{\sigma}}P(\bm{\sigma})=1$. Ziel ist es nun, $P(\bm{\sigma})$ als Produkt von Matrizen zu schreiben, sodass
 \begin{equation}
-P(\bm{\sigma})=A^{\sigma_1}\ldots A^{\sigma_L}
+P(\bm{\sigma})=A^{\sigma_1}\cdots A^{\sigma_L}
 \end{equation}
 
 Man spricht in diesem Fall von einem stochastischen Matrix-Produkt Zustand (sMPS). Um dieses Produkt weiterhin durch die $\text{L}_1$-Norm normieren zu können, muss von den Matrizen gefordert werden, dass sie elementweise positiv sind, also $A_{a_i,a_i+1}^{\sigma_{i+1}}\geq 0$. 
-Versucht man nun allerdings, die Koeffizienten analog zu \ref{MPS_constr_equ} in Matrizen aufzuteilen, ist eben dies nicht der Fall, da eine Singulärwert-Zerlegung im Allgemeinen Matrizen mit gemisch positiven und negativen Einträgen erzeugt. Wird allerdings eine nicht-negative Matrix-Faktorisierung (NMF) verwendet, können die Koeffizienten analog zu Gleichung \ref{MPS_constr_equ} in das Produkt von Matrizen aufgeteilt werden. Ebenso kann die Zeitentwicklung analog angewandt werden, wenn der Operator $e^{\hat{h_{i,i+1}}\tau}$ durch eine NMF zerlegt wird.\\
+Versucht man nun allerdings, die Koeffizienten analog zu \ref{MPS_constr_equ} in Matrizen aufzuteilen, ist eben dies nicht der Fall, da eine Singulärwert-Zerlegung im Allgemeinen Matrizen mit gemischt positiven und negativen Einträgen erzeugt. Wird allerdings eine nicht-negative Matrix-Faktorisierung (NMF) verwendet, können die Koeffizienten analog zu Gleichung \ref{MPS_constr_equ} in das Produkt von Matrizen aufgeteilt werden. Ebenso kann die Zeitentwicklung analog angewandt werden, wenn der Operator $e^{\hat{h}_{i,i+1}\tau}$ durch eine NMF zerlegt wird.\\
 
 
-Die Kompression eines sMPS kann analog zu einem normalen MPS durchgeführt werden, wenn die Singulärwert-Zerlegung durch eine NMF ersetzt wird,welche die Matrix in das Produkt von zwei Matrizen mit reduzierter Dimension zerlegt. Es ist allerdings zu beachten, dass sich das Verhalten des Fehlers bei der Kompression eines sMPS ändert, da dieser nicht mit der $L_2$, sondern der $L_1$-Norm normiert wird. Um diesen zu bestimmen, muss der Zustand zunächst in die Form
+Die Kompression eines sMPS kann analog zu einem normalen MPS durchgeführt werden, wenn die Singulärwert-Zerlegung durch eine NMF ersetzt wird, welche die Matrix in das Produkt von zwei Matrizen mit reduzierter Dimension zerlegt. Es ist allerdings zu beachten, dass sich das Verhalten des Fehlers bei der Kompression eines sMPS ändert, da dieser nicht mit der $L_2$, sondern der $L_1$-Norm normiert wird. Um diesen zu bestimmen, muss der Zustand zunächst in die Form\todo{A,B,D' erklären}
 \begin{equation}
 |p\rangle=\sum_{\lambda=1}^{D^{\prime}}p_{\lambda}|P_{\lambda}\rangle_A|P_{\lambda}\rangle_B
 \end{equation}
-gebracht werden.\cite{MPS-vs-sMPS} Wie die erreicht werden kann, wurde in \cite{sMPS} gezeigt und wird in Abschnitt \ref{information_entropy} vorgestellt.
+gebracht werden \cite{MPS-vs-sMPS}. Wie dies erreicht werden kann, wurde in \cite{sMPS} gezeigt und wird in Abschnitt \ref{information_entropy} vorgestellt.
 
 Komprimiert man nun den Zustand, indem nur über die $D$ größten $p_{\lambda}$ summiert wird, ist der Fehler nach oben beschränkt durch
 \begin{equation}
-\parallel|p\rangle-|p\rangle_{\text{trunc}}\parallel_1\leq\sum_{\lambda=D+1}^{D^{\prime}}p_{\lambda}
+\lVert|p\rangle-|p\rangle_{\text{trunc}}\rVert_1\,\leq\sum_{\lambda=D+1}^{D^{\prime}}p_{\lambda}
 \end{equation}
 Diese Zerlegung muss erneut für jede Bindung im Gitter durchgeführt werden um alle Matrizen zu komprimieren. Der gesamte Fehler ist dabei durch die Summe der Fehler bei den einzelnen Schritten nach oben beschränkt.\\
 
@@ -270,10 +272,10 @@ Zur Berechnung der Norm eines sMPS ist wie für einen MPS ein Umsortieren der In
 &=\sum_{\sigma_1}A^{\sigma_1}(\ldots(\sum_{\sigma_L}A^{\sigma_L})\ldots)=\prod_{i=1}^L(\sum_{\sigma_i}A^{\sigma_i})
 \end{split}
 \end{equation}
-Zuletzt soll noch behandelt werden, wie der Erwartungwert eines sMPS berechnet werden kann. Dafür wird zunächst der Operator als MPO dargestellt werden. Die Anwendung dieses MPO's auf den Zustand erfolgt dann völlig analog zu Gleichung \ref{MPO_MPS_equ} und man erhält einen neuen Satz Matrizen $N^{\sigma_i}$. Mittels dieser kann $\langle\hat{O}\rangle$ berechnet werden wie
+Zuletzt soll noch behandelt werden, wie der Erwartungwert eines sMPS berechnet werden kann. Dafür wird zunächst der Operator als MPO dargestellt. Die Anwendung dieses MPO's auf den Zustand erfolgt dann völlig analog zu Gleichung \ref{MPO_MPS_equ} und man erhält einen neuen Satz Matrizen $N^{\sigma_i}$. Mittels dieser kann $\langle\hat{O}\rangle$ berechnet werden wie
 
 \begin{equation}
-\langle\hat{O}\rangle=\parallel \hat{O}|p\rangle\parallel_1=\sum_{\SumIndex}N^{\sigma_1}\ldots N^{\sigma_L}=\sum_{\sigma_1}N^{\sigma_1}(\ldots(\sum_{\sigma_L}N^{\sigma_L})\ldots)
+\langle\hat{O}\rangle=\lVert\hat{O}|p\rangle\rVert_1=\sum_{\SumIndex}N^{\sigma_1}\cdots N^{\sigma_L}=\sum_{\sigma_1}N^{\sigma_1}\left( \cdots\left( \sum_{\sigma_L}N^{\sigma_L}\right)\cdots\right)
 \end{equation}
 
 \section{Gemeinsame Information und Entropie}\label{information_entropy}
@@ -285,7 +287,7 @@ Sei $|p\rangle$ als MPS dargestellt, so kann dieser durch eine Schmidt-Zerlegung
 \begin{equation}
 |p\rangle=\sum_{l}\lambda_{l}|l\rangle_A\otimes|l\rangle_B
 \end{equation}
-gebracht werden. Der Zustand ist hierbei in zwei Untersysteme $A$ und $B$ aufgeteilt worden, wobei das System aus $A$ alle Gitterplätze bis einschließlich dem $l$-ten besteht, und $B$ den restlichen. Es lassen sich für diese Systeme die Dichtematrizen
+gebracht werden. Der Zustand ist hierbei in zwei Untersysteme $A$ und $B$ aufgeteilt worden, wobei das System aus $A$ alle Gitterplätze bis einschließlich dem $l$-ten besteht, und $B$ den restlichen. Für diese Systeme lassen sich die Dichtematrizen
 \begin{equation}
 \begin{split}
 \rho=\sum_{l,l^{\prime}}\lambda_l\lambda_{l^{\prime}}|l\rangle_A\langle l|_A\otimes |l\rangle_B\langle l|_B\\
@@ -301,7 +303,7 @@ Dabei bezeichnet $S$ die Shannon-Entropie dieser Zerlegung. Diese ist definiert 
 \begin{equation}
 S(\rho)=-\text{Tr}(\rho\log(\rho))=\sum_l\lambda_l^2\log(\lambda_l^2)
 \end{equation} 
-Da es sich bei dem Zustand $|p\rangle$ um einen normierten, reinen Zustand handelt ist $S(\rho)=0$\footnote{Dies ist der Fall, da $\rho=1|\psi\rangle\langle\psi|$ und damit $\text{Tr}(\rho\log(\rho))=1\log(1)=0$} und Gleichung \ref{information_equ} vereinfacht sich zu $I_{A:B}=2S(\rho_A)=2S(\rho_B)$.\cite{Entropy}\\
+Da es sich bei dem Zustand $|p\rangle$ um einen normierten, reinen Zustand handelt ist $S(\rho)=0$\footnote{Dies ist der Fall, da $\rho=1|\psi\rangle\langle\psi|$ und damit $\text{Tr}(\rho\log(\rho))=1\log(1)=0$.} und Gleichung \ref{information_equ} vereinfacht sich zu $I_{A:B}=2S(\rho_A)=2S(\rho_B)$  \cite{Entropy}.\\
 
 
 Da ein sMPS nicht wie ein MPS in eine Schmidt-Zerlegung gebracht werden kann, ist das direkte Berechnen der gemeinsamen Information auf diese Art nicht möglich. Wie in \cite{sMPS} allerdings gezeigt wurde, kann ein sMPS derart zerlegt werden, dass eine obere Schranke für $I_{A:B}$ bestimmt werden kann. Dazu muss der Zustand $|p\rangle$ in die Form
@@ -311,9 +313,9 @@ Da ein sMPS nicht wie ein MPS in eine Schmidt-Zerlegung gebracht werden kann, is
 gebracht werden, wobei $p_{\lambda}$ eine Wahrscheinlichkeitsverteilung sein muss.
 
 
-Temme und Vestrate haben dafür durch die Matrizen $A^{\sigma_i}$ die Verteilung 
+Temme und Vestrate haben \cite{sMPS} haben dafür durch die Matrizen $A^{\sigma_i}$ die Verteilung 
 \begin{equation}
-p_{\lambda}=\prod_{i=1}^l(\sum_{\sigma_i}A^{\sigma_i})|\lambda\rangle\langle\lambda|\prod_{i=l+1}^L(\sum_{\sigma_i}A^{\sigma_i})
+p_{\lambda}=\prod_{i=1}^l\left(\sum_{\sigma_i}A^{\sigma_i}\right) |\lambda\rangle\langle\lambda|\prod_{i=l+1}^L\left(\sum_{\sigma_i}A^{\sigma_i}\right)
 \end{equation}
 definiert. Hierbei ist  $|\lambda\rangle$ so gewählt, dass $\sum_{\lambda}|\lambda\rangle\langle\lambda|=\mathbb{1}$. Wird diese Faktorisierung der Identität nun zwischen $A^{\sigma_l}$ und $A^{\sigma_{l+1}}$ eingefügt und mit $p_{\lambda}/p_{\lambda}$ erweitert, so ergibt sich
 
@@ -335,27 +337,30 @@ I_{A:B}\leq S_C=\min_{\lambda,A,B}(S(\rho_A))
 wobei $S(p_{\lambda})=-\sum_{\lambda}p_{\lambda}\log(p_{\lambda})$ erneut die Shannon-Entropie ist und $S_C$ Entropie-Kosten genannt wird. Es ist zu beachten, dass die Faktorisierung der Einheitsmatrix nicht eindeutig ist, was daher auch für die Zerlegung des Zustandes gilt. Für eine grobe Abschätzung der gemeinsamen Information reicht es allerdings aus, eine spezielle zu untersuchen.
 
 
+
+
+
+
 \chapter{Das ASEP-Modell}
-Das ASEP-Modell (Asymmetric Simple Exclusion Process) beschreibt ein eindimensionales System mit offenen Randbedingungen. Es handelt sich dabei um ein Gitter mit $L$ Plätzen, die entweder einfach besetzt oder leer sind. Ist der erste Gitterplatz unbesetzt, so wird nach dem Zeitschritt $dt$ mit einer Wahrscheinlichkeit $\alpha dt$ ein Teilchen an dieser Position eingesetzt. Weiters wird in diesem Zeitschritt mit der Wahrscheinlichkeit $\beta dt$ ein Teilchen an der letzten Position aus dem Gitter entnommen, wenn diese besetzt ist. Zwischen den Gitterplätzen können sich die Teilchen nur in Richtung des letzten Gitterplatzes bewegen,\footnote{In diesem Fall wird auch von dem TASEP-Modell (totaly asysmmetric exclusion process) gesprochen} was sie mit der Wahrscheinlichkeit $pdt$ tun, vorausgesetzt der nächste Platz ist unbesetzt.\todo{Weitere Quelle finden} Da der einzige Einfluss des konkreten Wertes von $p$ eine Skalierung der Zeit ist, wird  dieser üblicherweise 1 gesetzt.\\
+Das ASEP-Modell (Asymmetric Simple Exclusion Process) beschreibt ein eindimensionales System mit offenen Randbedingungen. Es handelt sich dabei um ein Gitter mit $L$ Plätzen, die entweder einfach besetzt oder leer sind. Ist der erste Gitterplatz unbesetzt, so wird nach dem Zeitschritt $\dif t$ mit einer Wahrscheinlichkeit $\alpha \dif t$ ein Teilchen an dieser Position eingesetzt. Weiters wird in diesem Zeitschritt mit der Wahrscheinlichkeit $\beta \dif t$ ein Teilchen an der letzten Position aus dem Gitter entnommen, wenn diese besetzt ist. Zwischen den Gitterplätzen können sich die Teilchen nur in Richtung des letzten Gitterplatzes bewegen\footnote{In diesem Fall wird auch von dem TASEP-Modell (totaly asysmmetric exclusion process) gesprochen.}, was sie mit der Wahrscheinlichkeit $p\dif t$ tun, vorausgesetzt der nächste Platz ist unbesetzt.\todo{Weitere Quelle finden} Da der einzige Einfluss des konkreten Wertes von $p$ eine Skalierung der Zeit ist, wird  dieser üblicherweise 1 gesetzt.\\
 
 \section{Mathematische Beschreibung}
-Die Dynamik des Systems kann zunächst durch Ratengleichungen beschrieben werden. Dafür sei $p_i(t+dt)$ die Wahrscheinlichkeit, dass die Position $i$ zum Zeitpunkt $t+dt$ besetzt ist und $\tau_i$ die Besetzungszahl des $i$-ten Gitterplatzes zum Zeitpunkt $t$. Wir müssen hierbei drei Fälle unterscheiden:
+Die Dynamik des Systems kann zunächst durch Ratengleichungen beschrieben werden. Dafür sei $p_i(t+\dif t)$ die Wahrscheinlichkeit, dass die Position $i$ zum Zeitpunkt $t+\dif t$ besetzt ist und $\tau_i$ die Besetzungszahl des $i$-ten Gitterplatzes zum Zeitpunkt $t$. Wir müssen hierbei drei Fälle unterscheiden:
 \begin{equation}\label{rate_equ}
-p_i(t+dt)=
+p_i(t+\dif t)=
 \begin{cases}
-\tau_1+[\alpha(1-\tau_1)-\tau_1(1-\tau_2)]dt & \text{für}\ i=1\\
-\tau_i+[\tau_{i-1}(1-\tau_i)-\tau_i(1-\tau_{i+1})]dt & \text{für}\ 1<i<L\\
-\tau_L+[\tau_{N-1}(1-\tau_N)-\beta\tau_N]dt & \text{für}\ i=L
+\tau_1+[\alpha(1-\tau_1)-\tau_1(1-\tau_2)]\dif t & \text{für}\ i=1\\
+\tau_i+[\tau_{i-1}(1-\tau_i)-\tau_i(1-\tau_{i+1})]\dif t & \text{für}\ 1<i<L\\
+\tau_L+[\tau_{N-1}(1-\tau_N)-\beta\tau_N]\dif t & \text{für}\ i=L
 \end{cases}
 \end{equation}
 
-Die Wahrscheinlichkeit, dass von dem System mit $L$ Gitterplätzen die spezielle Konfiguration $\{ \tau_1,\ldots,\tau_L \}$ angenommen wird, soll im Folgenden mit $P_L(\tau_1,\ldots,\tau_L)$ bezeichnet werden. Da es sich hier um kein abgeschlossenens System handelt, existiert kein Gleichgewichtszustand, es kann allerdings ein stationärer Zustand gefunden werden. Für diesen Zustand gilt
-
+Die Wahrscheinlichkeit, dass von dem System mit $L$ Gitterplätzen die spezielle Konfiguration $\{ \tau_1,\ldots,\tau_L \}$ angenommen wird, soll im Folgenden mit $P_L(\tau_1,\ldots,\tau_L)$ bezeichnet werden. Da es sich hier um kein abgeschlossenes System handelt, existiert kein Gleichgewichtszustand, es kann allerdings ein stationärer Zustand gefunden werden \cite{ASEP}. Für diesen Zustand gilt
 \begin{equation}
-\frac{d}{dt}P_L(\tau_1,\ldots,\tau_L)=0
+\od{}{t}P_L(\tau_1,\ldots,\tau_L)=0
 \end{equation}
 
-Um diesen stationären Zustand zu finden muss zunächst 
+Um diesen stationären Zustand zu finden muss zunächst die Zeitentwicklung von $P$ beschrieben werden. Dieselben Überlegungen aus Gleichung \ref{rate_equ} liefern so
 
 \begin{equation}\label{P_umständlich}
 \begin{split}
@@ -373,9 +378,9 @@ p&-q\\
 \end{pmatrix}
 \end{equation}
 
-Die negativen Einträge stammen daher, dass ein Zustand mit derselben Rate verlassen wird, mit der er in andere übergeht. Daher ist die Summe über alle Einträge einer Spalte einer solchen Matrix stets 0.\cite{ASEP_Update}\\
+Die negativen Einträge stammen daher, dass ein Zustand mit derselben Rate verlassen wird, mit der er in andere übergeht. Daher ist die Summe über alle Einträge einer Spalte einer solchen Matrix stets 0 \cite{ASEP_Update}.\\
 
-Dieser Konstruktion folgend erhält man für das ASEP-Modell drei Matrizen. Diese stellen, der Reihe nach, die Vorgänge des Einfügens und Entnehmens eines Teilchens dar, sowie das Hüpfen eines Teilchens auf den benachbarten Platz. Die verwendete Basis ist $(|1\rangle,|0\rangle)$ sowie $(|1\rangle,|0\rangle)\otimes(|1\rangle,|0\rangle)$
+Dieser Konstruktion folgend, erhält man für das ASEP-Modell drei Matrizen. Diese stellen der Reihe nach die Vorgänge des Einfügens und Entnehmens eines Teilchens dar, sowie das Hüpfen eines Teilchens auf den benachbarten Platz. Die verwendete Basis ist $(|1\rangle,|0\rangle)$ sowie $(|1\rangle,|0\rangle)\otimes(|1\rangle,|0\rangle)$
 
 \begin{equation}
 h_1=
@@ -403,38 +408,38 @@ Mit diesen Matrizen kann erneut die zeitliche Änderung des Zustandes beschriebe
 
 \begin{equation}\label{P_einfach}
 \begin{split}
-\frac{d}{dt}P_L(\tau_1,\ldots,\tau_L) =& \sum_{\sigma_1}(h_1)_{\tau_1,\sigma_1}P_L(\sigma_1,\tau_2,\ldots,\tau_L)\\
+\od{}{t}P_L(\tau_1,\ldots,\tau_L) =& \sum_{\sigma_1}(h_1)_{\tau_1,\sigma_1}P_L(\sigma_1,\tau_2,\ldots,\tau_L)\\
 +&\sum_{i=1}^{L-1}\sum_{\sigma_i,\sigma_{i+1}}h_{(\tau_i\tau_{i+1}),(\sigma_i\sigma_{i+1})}P_L(\tau_1,\ldots,\sigma_i,\sigma_{i+1},\ldots,\tau_L)\\
 +&\sum_{\sigma_L}(h_L)_{\tau_L,\sigma_L}P_L(\tau_1,\ldots,\tau_{L-1},\sigma_L)
 \end{split}
 \end{equation}
 
-Wie man durch Einsetzen überprüfen kann, stimmen Gleichungen \ref{P_umständlich} und \ref{P_einfach} überein. Vergleicht man Gleichung \ref{P_einfach} mit Gleichung \ref{MPO_MPS_equ}, so kann man diese als die Wirkung eines Operators $\hat{H}=\hat{h}_1+\hat{h}_L+\sum_{i=1}^L\hat{h}_{i,i+1}$ auf $P_L$ auffassen.\footnote{Dabei ist der Operator $h_{i,i+1}$ der Operator $h$ einwirkend auf Positionen $i$ und $i+1$} Damit vereinfacht sich das Problem weiter zu
+Wie man durch Einsetzen überprüfen kann, stimmen Gleichungen \ref{P_umständlich} und \ref{P_einfach} überein. Vergleicht man Gleichung \ref{P_einfach} mit Gleichung \ref{MPO_MPS_equ}, so kann man diese als die Wirkung eines Operators $\hat{H}=\hat{h}_1+\hat{h}_L+\sum_{i=1}^L\hat{h}_{i,i+1}$ auf $P_L$ auffassen\footnote{Dabei ist der Operator $h_{i,i+1}$ gegeben durch durch $h$}. Damit vereinfacht sich das Problem weiter zu
 \begin{equation}
-\frac{d}{dt}P_L=\hat{H}P_L
+\od{}{t}P_L=\hat{H}P_L
 \end{equation}
 
 Diese lineare Differenzialgleichung lässt sich nun einfach lösen und es ergibt sich
 
 \begin{equation}\label{ASEP_solution_equ}
-P_L(t)=e^{\hat{H}t}P_L(0)
+P_L(t)=e^{\hat{H}t}P_L
 \end{equation}
 
 \section{Analytische Lösung}
 
-Das Studium des ASEP-Modells ist unter anderem deshalb sehr nützlich, da ein analytische Lösung existiert, mit der die Ergebnisse einer Näherung verglichen werden können. Aus diesem Grund werden hier die Lösungen für die mittlere Besetzungszahl an einer beliebigen Position $i$ sowie dem Fluss durch das Gitter im stationären Zustand zusammengefasst, welche in \cite{ASEP} vorgestellt wurden.
+Das Studium des ASEP-Modells ist unter anderem deshalb sehr nützlich, da ein analytische Lösung existiert, mit der die Ergebnisse einer Näherung verglichen werden können. Aus diesem Grund werden hier die Lösungen für die mittlere Besetzungszahl an einer beliebigen Position $i$ sowie dem Fluss\footnote{Mit dem Fluss ist hier die Rate gemeint, mit der sich Teilchen zum benachbarten Gitterplatz bewegen.} durch das Gitter im stationären Zustand zusammengefasst, welche in \cite{ASEP} vorgestellt wurden.
 
 Im Folgenden bezeichne $\hat{N}_i$ den Besetzungsoperator an dem Gitterplatz $i$ eines $L$-Positionen ASEP-Modells. Für die mittlere Besetzungszahl $\langle\hat{N}_i\rangle$ gilt dann nach \cite{ASEP}
 \begin{equation}
 \langle\hat{N}_i\rangle_L=\sum_{k=0}^{L-i-1}\frac{2k!}{k!(k+1)!}\frac{R(L-k-1)}{R(L)}+\frac{R(i-1)}{R(L)}\sum_{k=2}^{L-i+1}\frac{(k-1)(2(L-i)-k)!}{(L-i)!(L-i-k+1)!}\beta^{-k}
 \end{equation}
 
-Die Funktion $R(n)$ ist hierbei gegeben durch\footnote{Die Abhängigikeit von $\alpha$ und $\beta$ wird hier aus Gründen der Übersicht nicht explizit angegeben}
+Die Funktion $R(n)$ ist hierbei gegeben durch\footnote{Die Abhängigikeit von $\alpha$ und $\beta$ wird hier aus Gründen der Übersichtlichkeit nicht explizit angegeben.}
 \begin{equation}
 R(n)=\sum_{k=1}^{n}\frac{k(2n-1+k)!}{n!(n-k)!}\frac{\beta^{-k-1}-\alpha^{-k-1}}{\beta^{-1}-\alpha^{-1}}
 \end{equation}
 
-In Abbildung \ref{ASEP_density_img} sind die Dichteverteilungen eines Systems der Größe $L=20$ für verschieden Parameter $\alpha$ und $\beta$ zu sehen.
+In Abbildung \ref{ASEP_density_img} sind die Dichteverteilungen eines Systems der Größe $L=20$ für verschiede Parameter $\alpha$ und $\beta$ zu sehen.
 
 \begin{figure}
 \centering
@@ -442,11 +447,11 @@ In Abbildung \ref{ASEP_density_img} sind die Dichteverteilungen eines Systems de
 \subfloat{\includegraphics[width=0.4\textwidth]{Julia/0,9_0,8.png}}\\
 \subfloat{\includegraphics[width=0.4\textwidth]{Julia/0,2_0,2.png}}
 \subfloat{\includegraphics[width=0.4\textwidth]{Julia/0,4_0,2.png}}
-\caption{Dichteverteilungen für verschiedene Ein- und Ausfluss Parameter}
+\caption{Dichteverteilungen für verschiedene Ein- und Ausfluss-Parameter}
 \label{ASEP_density_img}
 \end{figure}
 
-Dies für große Systeme zu berechnen ist insofern problematisch, da Faktoren bis zu $(2L-2)!$ auftreten. Für große $L$ ist es daher nützlich, auf die asymptotische Lösung $L\rightarrow\infty$ zurückzugreifen. Hierbei unterscheidet man zwischen der Lösung an den beiden Rändern des Gitters sowie für Plätze weit entfernt von jenen. Zunächst werde die Dichte weit von den Rändern betrachtet (dh. $1\ll i \ll L$).
+Dies für große Systeme zu berechnen ist insofern problematisch, da Faktoren bis zu $(2L-2)!$ auftreten. Für große $L$ ist es daher nützlich, auf die asymptotische Lösung $L\rightarrow\infty$ zurückzugreifen. Hierbei unterscheidet man zwischen der Lösung an den beiden Rändern des Gitters sowie für Plätze weit entfernt von diesen. Zunächst werde die Dichte weit von den Rändern betrachtet (d.\,h.~ $1\ll i \ll L$).
 
 \begin{equation}\label{density_equ}
 \langle\hat{N}_i\rangle_L\simeq
@@ -460,7 +465,7 @@ Dies für große Systeme zu berechnen ist insofern problematisch, da Faktoren bi
 
 Es ist zu sehen, dass die Dichte im Zentrum des Gitters (also für $i/L\simeq 1/2$) im Fall $\alpha<\frac{1}{2}\text{ und }\beta\leq\alpha$ minimal und im Fall $\beta<\frac{1}{2}\text{ und }\alpha\leq\beta$ maximal wird, und ansonsten etwa $\frac{1}{2}$ beträgt.
 
-Zur kompakten Beschreibung der Dichten an den Rändern wird zunächst eine neue Größe $\kappa$ eingeführt. Diese kann genähert werden als $\kappa^{-n}\approx f(\alpha,\beta)R(n)$, wenn $n$ groß ist. Der Faktor $f(\alpha,\beta)$ ist hier nicht relevant, da in den Gleichungen für die Dichten nur Terme der Form $R(a)/R(b)$ vorkommen. Wie in \cite{ASEP} gezeigt, ergibt sich für $\kappa$
+Zur kompakten Beschreibung der Dichten an den Rändern wird zunächst eine neue Größe $\kappa$ eingeführt. Diese kann als $\kappa^{-n}\approx f(\alpha,\beta)R(n)$ genähert werden, wenn $n$ groß ist. Der Faktor $f(\alpha,\beta)$ ist hier nicht relevant, da in den Gleichungen für die Dichten nur Terme der Form $R(a)/R(b)$ vorkommen. Wie in \cite{ASEP} gezeigt, ergibt sich für $\kappa$
 \begin{equation}
 \kappa=
 \begin{cases}
@@ -475,7 +480,7 @@ Die erwarteten Dichten am ersten und letzen Gitterplatz lassen sich damit schrei
 \langle\hat{N}_1\rangle_L=1-\frac{\kappa}{\alpha} \qquad \langle\hat{N}_L\rangle_L=\frac{\kappa}{\beta}
 \end{equation}
 
-Der Fluss der Teilchen durch das Gitter kann berechnet werden als der Erwartungswert, dass ein Teilchen auf den nächsten Gitterplatz springt. Die Wahrscheinlichkeit, dass dies passiert wurde in Gleichung \ref{rate_equ} bereits verwendet, und ist durch $\tau_i(1-\tau_{i+1})dt$ gegeben. Wie in \cite{ASEP} gezeigt wurde, kann dann der Fluss $J$ zwischen zwei benachbarten Gitterplätzen im stationären Zustand berechnet werden durch
+Der Fluss der Teilchen durch das Gitter kann berechnet werden als der Erwartungswert, dass ein Teilchen auf den nächsten Gitterplatz springt. Die Wahrscheinlichkeit, dass dies passiert, wurde in Gleichung \ref{rate_equ} bereits verwendet, und ist durch $\tau_i(1-\tau_{i+1})\dif t$ gegeben. Wie in \cite{ASEP} gezeigt wurde, kann dann der Fluss $J$ zwischen zwei benachbarten Gitterplätzen im stationären Zustand berechnet werden durch
 \begin{equation}
 J=\langle\hat{N}_i(\hat{\mathbb{1}}-\hat{N}_{i+1})\rangle_L=\frac{R(L-1)}{R(L)}
 \end{equation}
@@ -485,20 +490,20 @@ Betrachtet man den Grenzfall $L\rightarrow\infty$, ergibt sich daher
 J=\kappa
 \end{equation}
 
-Die drei Fälle, welche für $\kappa$ und damit $J$ unterschieden werden, bilden die Phasen des ASEP-Modells. Wie leicht gesehen werden kann, ist der Fluss im Fall $\alpha\geq\frac{1}{2}\text{ und }\beta\geq\frac{1}{2}$ am größten, man spricht daher von der maximal-Fluss Phase. Die Fälle $\alpha\leq\frac{1}{2}\text{ und }\beta>\alpha$ sowie $\beta\leq\frac{1}{2}\text{ und }\alpha>\beta$ werden 'niedrige Dichte' und 'hohe Dichte'\todo{bessere Namen?} Phase genannt (vgl. \ref{density_equ}). 
+Die drei Fälle, welche für $\kappa$ und damit $J$ unterschieden werden, bilden die Phasen des ASEP-Modells. In Abbildung \ref{ASEP_flux_analy} sind der Fluss sowie die Phasengrenzen für den Limes $L\rightarrow\infty$ aufgetragen. Wie leicht gesehen werden kann, ist der Fluss im Fall $\alpha\geq\frac{1}{2}\text{ und }\beta\geq\frac{1}{2}$ am größten, man spricht daher von der Maximal-Fluss Phase. Die Fälle $\alpha\leq\frac{1}{2}\text{ und }\beta>\alpha$ sowie $\beta\leq\frac{1}{2}\text{ und }\alpha>\beta$ werden 'niedrige Dichte' und 'hohe Dichte'\todo{bessere Namen?} Phase genannt (vgl. Gleichung~ \ref{density_equ}).
 
 
 \begin{figure}
 \begin{center}
-\includegraphics[width=0.45\textwidth]{Julia/ASEP-Phasen.png}
-\caption{Der Fluss $J$. Die Linien zeigen die Phasengrenzen an}
+\includegraphics[width=0.5\textwidth]{Julia/Data/ASEP-Phasen.png}
+\caption{Der Fluss $J$. Die Linien zeigen die Phasengrenzen an.}
 \label{ASEP_flux_analy}
 \end{center}
 \end{figure}
 
  
 
-\chapter{Implementierung}
+\chapter{Ergebnisse}
 \section{Implementierung im MPS-Formalismus}
 
 Um das ASEP-Modell mittels des MPS-Formalismus behandeln zu können, ist zunächst eine Darstellung eines ASEP-Zustandes als MPS nötig. Dabei kann verwendet werden, dass die Wahrscheinlichkeit, einen Zustand $|\psi\rangle$ wie in Gleichung \ref{psi_equ} in einer bestimmten Konfiguration $|\hat{\sigma}_1,\ldots,\hat{\sigma}_L\rangle$ zu finden durch $(c_{\SumIndex})^2$ gegeben ist. Ein ASEP-Zustand kann also geschrieben werden als
@@ -511,7 +516,7 @@ A^{\tau_i}=\sqrt{p}\ \delta_{1,\tau_i}+\sqrt{1-p}\ \delta_{0,\tau_i}
 \end{equation}
 Aus Symmetrie-Gründen, sowie für eine schnellere Konvergenz wurde $p=0.5$ gewählt.
 
-Die Zeitentwicklung dieser ist nun analog zu der aus Gleichung \ref{ASEP_solution_equ}.\todo{Zeit neu skalieren?} Um den tMPS Algorithmus aus Abschnitt \ref{tMPS} zu verwendet, ist es allerdings nötig, den Hamiltonian als Summe von Nachbar-Wechselwirkungs Hamiltonians zu schreiben. Um dies zu erreichen, kann ausgenutzt werden, dass $\hat{h}_1$ und $\hat{h}_L$ Abkürzungen für die Ausdrücke $\hat{h}_1\otimes\hat{\mathbb{1}}\otimes\ldots\otimes\hat{\mathbb{1}}$ sowie $\hat{\mathbb{1}}\otimes\ldots\otimes\hat{\mathbb{1}}\otimes\hat{h}_L$ sind. Fasst man nun die Tensorprodukte $\hat{h}_1\otimes\hat{\mathbb{1}}$ und $\hat{\mathbb{1}}\otimes\hat{h}_L$ zusammen, und addiert den Operator $\hat{h}_{i,i+1}$ hinzu, erhält man die Nachbar-Wechselwirkungs Hamiltonians
+Für die Zeitentwicklung dieses Zustands ist nun analog zu dem Gleichung \ref{ASEP_solution_equ} beschriebenen Algorithmus. Um den tMPS Algorithmus aus Abschnitt \ref{tMPS} zu verwendet, ist es allerdings nötig, den Hamiltonian als Summe von Nachbar-Wechselwirkungs-Hamiltonians zu schreiben. Um dies zu erreichen, kann ausgenutzt werden, dass $\hat{h}_1$ und $\hat{h}_L$ Abkürzungen für die Ausdrücke $\hat{h}_1\otimes\hat{\mathbb{1}}\otimes\ldots\otimes\hat{\mathbb{1}}$ sowie $\hat{\mathbb{1}}\otimes\ldots\otimes\hat{\mathbb{1}}\otimes\hat{h}_L$ sind. Fasst man nun die Tensorprodukte $\hat{h}_1\otimes\hat{\mathbb{1}}$ und $\hat{\mathbb{1}}\otimes\hat{h}_L$ zusammen und addiert den Operator $\hat{h}_{i,i+1}$ hinzu, erhält man die Nachbar-Wechselwirkungs-Hamiltonians
 \begin{equation}
 \hat{h}_{1,2}^\prime=
 \begin{pmatrix}
@@ -536,7 +541,7 @@ Mit $\hat{h}_{L-1,L}^\prime=\hat{h}_{L-1,L}$ für $2<i<(L-1)$ kann nun die Zeite
 \end{equation}
 Für übliche quantenmechanische Systeme wäre $\hat{H}$ hermitesch, und es würde gelten $\langle\psi(t)|=(|\psi(t)\rangle)^\dagger$. Dies ist hier aufgrund der Asymmetrie des Problems nicht der Fall! Es muss daher, um Erwartungswerte zu berechnen, sowohl $e^{\hat{H} t}|\psi\rangle$ als auch $e^{\hat{H}^\dagger t}|\psi\rangle$ berechnet werden.\\
 
-Die im ASEP-Modell relevanten Größen sind die Erwartungswerte der Besetzungszahl eines Gitterplatzes sowie der Fluss von einem Platz zum nächsten. Um diese zu berechnen ist der Besetzungs-Operator in der bisher verwendeten Basis nötig. Er ist gegeben durch
+Die im ASEP-Modell relevanten Größen sind die Erwartungswerte der Besetzungszahl eines Gitterplatzes sowie der Fluss von einem Platz zum nächsten. Um diese zu berechnen, ist der Besetzungs-Operator in der bisher verwendeten Basis nötig. Er ist gegeben durch
 \begin{equation}
 \hat{N}^{\tau_i,\tau_i^{\prime}}=
 \begin{cases}
@@ -545,56 +550,34 @@ Die im ASEP-Modell relevanten Größen sind die Erwartungswerte der Besetzungsza
 \end{cases}
 \end{equation}
 
-\section{Dichte-Verteilung und Fluss}
-Im Folgenden werden die Näherungen des ASEP-Modells durch MPS sowie sMPS präsentiert. \todo{Hier müssen noch 1-2 Sätzte her}
-\subsection{MPS}
+\section{Fehler-Analyse der MPS- und sMPS-Näherung}
 
-\begin{figure}
-\centering
-\subfloat[$\Delta t=0.5$]{\includegraphics[width=0.45\textwidth]{Julia/Data/tMPS_0,5.png}}
-\subfloat[$\Delta t=0.1$]{\includegraphics[width=0.45\textwidth]{Julia/Data/tMPS_0,1.png}}
-\caption{Dichteverteilungen für verschieden große Zeitschritte ($L=??,D=??$)}
-\label{tMPS_time_error_img}
-\end{figure}
+
+Im Folgenden sollen die Näherungen des ASEP-Modells auf ihre Genauigkeit untersucht werden. Dafür werden im Folgenden die analytischen Ergebnisse sowohl von der Dichteverteilung als auch von dem Fluss im stationären Zustand mit den Ergebnissen der MPS- sowie sMPS-Berechnungen verglichen. Diese wurden jeweils zwei mal mit verschiedenen maximalen Matrixdimensionen durchgeführt, um den qualitativen Einfluss dieser auf die Näherung beurteilen zu können.
+
+\subsection{MPS}\label{ASEP_MPS}
+
 
 Um eine gute Konvergenz des MPS zu erhalten, wurde die Zeitentwicklung bis $t=40L$ in zunächst in großen Schritten von $\Delta t=0.5$ durchgeführt. Bei Zeitschritten dieser Größe ist ein starkes Oszillieren der Erwartungswerte zu beobachten, weshalb mindestens eine weitere Zeitentwicklung mit $t=2L$ und $\Delta t=0.1$ durchgeführt wurde (vgl. Abbildung \ref{tMPS_time_error_img}). Werden weitere Schritte mit kleiner werdendem $\Delta t$ durchgeführt, kann die Genauigkeit solange verbessert werden, bis die Einschränkung der maximalen Matrixgröße den Fehler nach unten beschränkt. Für $L=20$ und $D=12$ konnte so die Dichte mit geringem Aufwand auf eine Abweichung von unter $10^{-4}$ genau berechnet werden.
 
-
+\begin{figure}\label{tMPS_time_error_img}
+\centering
+\subfloat[$\Delta t=0.5$]{\includegraphics[width=0.45\textwidth]{Julia/Data/tMPS_0,5.png}}
+\subfloat[$\Delta t=0.1$]{\includegraphics[width=0.45\textwidth]{Julia/Data/tMPS_0,1.png}}
+\caption{Dichteverteilungen für verschieden große Zeitschritte ($L=20,D=12$)}
+\end{figure}
 
 Damit die Genauigkeit der MPS-Näherung besser untersucht werden kann, wurde ein System mit $L=10$ für die Parameter $\alpha$ und $\beta$  von $0$ bis $1$ in Schritten von $0.025$ berechnet. Es wurden dabei für ca. $1700$ Wertepaare die Dichteverteilung sowie der Fluss durch das System aufgezeichnet.\\
 
-In Abbildung \ref{ASEP_flux&info_img} sind der Fluss durch das System sowie die gemeinsame Information aufgetragen. In \ref{ASEP_flux_img} ist die Struktur des Phasendiagramms aus \ref{ASEP_flux_analy} zu erkennen, aufgrund der Endlichkeit des Systems stimmen diese allerdings nicht überein. 
-Für die gemeinsame Information ist zu beobachten, dass für $\alpha+\beta=1$ diese stets $0$ ist. Dies kann verstanden werden, indem die Dichteverteilung für diese Wertepaare untersucht wird. Wie in \cite{ASEP} auf Seite $1508$ bemerkt, liegt diese konstant bei $\alpha$. Da das System durch alle Besetzungszahlen vollständig beschrieben ist (vgl. Gleichung \ref{rate_equ}), kann dieses daher durch einen MPS mit Dimension $1$ beschrieben werden, wie in Gleichung \ref{mean_field_MPS}\footnote{Dies entspricht einem mean-field Ansatz. \cite{Area_law}} Weiters ist zu beobachten,dass die gemeinsame Information für $\alpha\approx\beta$ für ein festes $\alpha$ (bzw. ein festes $\beta$) maximal wird, mit Außnahme von $\alpha\approx0.5$.\\
+In Abbildung \ref{ASEP_flux_info_img} sind der Fluss durch das System sowie die gemeinsame Information aufgetragen. In \ref{ASEP_flux_img} ist die Struktur des Phasendiagramms aus Abbildung~\ref{ASEP_flux_analy} zu erkennen, aufgrund der Endlichkeit des Systems stimmen diese allerdings nicht überein. 
+Für die gemeinsame Information ist zu beobachten, dass für $\alpha+\beta=1$ diese stets $0$ ist\footnote{In der Abbildung nicht zu erkennen ist, dass dies für fast alle anderen Punkte nicht der Fall ist.}. Dies kann verstanden werden, indem die Dichteverteilung für diese Wertepaare untersucht wird. Wie in \cite{ASEP} auf Seite $1508$ bemerkt, liegt diese konstant bei $\alpha$. Da das System durch alle Besetzungszahlen vollständig beschrieben ist (vgl. Gleichung \ref{rate_equ}), kann dieses daher durch einen MPS mit Dimension $1$ beschrieben werden, wie es in Gleichung \ref{mean_field_MPS} der Fall war.\footnote{Dies entspricht einem mean-field Ansatz \cite{Area_law}.} Weiters ist zu beobachten, dass die gemeinsame Information für $\alpha\approx\beta$ für ein festes $\alpha$ (bzw. ein festes $\beta$) maximal wird. Die Außnahme bildet $\alpha\approx0.5$, da für $\alpha\approx\beta$ folglich $\alpha+\beta\approx 1$ ist, was wie zuvor besprochen mit einem Minimum der Information verknüpft ist.\\
 
-\begin{figure}
+\begin{figure}\label{ASEP_flux_info_img}
 \centering
-\subfloat[Fluss]{\includegraphics[width=0.45\textwidth]{Julia/Data/flow.png}\label{ASEP_flux_img}}
-\subfloat[gemeinsame Information]{\includegraphics[width=0.45\textwidth]{Julia/Data/entropy_exp_scale.png}\label{ASEP_info_img}}\label{ASEP_flux&info_img}
+\subfloat[Fluss]{\includegraphics[width=0.5\textwidth]{Julia/Data/flow.png}\label{ASEP_flux_img}}
+\subfloat[Maximum der gemeinsamen Information. Die periodischen Maxima entlang $\alpha=\beta$ sind ein Artefakt der Schrittgrößen in $\alpha$ und $\beta$.]{\includegraphics[width=0.5\textwidth]{Julia/Data/max_information.png}\label{ASEP_info_img}}\label{ASEP_flux&info_img}
 \caption{Fluss durch das System sowie minimale gemeinsame Information mit exponentieller Farb-Skala}
 \end{figure}
-
-
-
-Es soll im weiteren die Qualität der MPS-Näherung an die exakte Lösung behandelt werden. Da für jedes Wertepaar $(\alpha,\beta)$ $L$ Werte für die Dichte und $L-1$ für den Fluss vorliegen, ist für die kompakte Darstellung des Fehlers ein Maß für die mittlere Abweichung nötig. Dafür wurde für die Dichteverteilung die Funktion
-\begin{equation}
-\text{Err}(\alpha,\beta)=\sqrt{\frac{\sum_{i=1}^L (\tau_i-\tau_i^{\text{exakt}})^2}{N}}
-\end{equation}
-definiert. Dabei ist $\tau_i$ die simulierte Dichte am Gitterplatz $i$, während $\tau_i^{\text{exakt}}$ für die analytisch berechnete Dichte steht. Diese Funktion kann als mittlerer Abstand zwischen der exakten und MPS Lösung verstanden werden.
-
-Da der Fluss durch ein System in im stationären Zustand stets konstant sein muss (vgl. \cite{ASEP}), wurden zur Abschätzung des Fehlers im Fluss die Abweichung des Mittelwerts zum exakten Wert sowie die relative Streuung des Flusses betrachtet. Auch wenn der Mittelwert mit dem exakten übereinstimmt, ist der stationäre Zustand nur dann erreicht, wenn die Streuung gegen $0$ geht. Ist dies nicht der Fall, wurde entweder $t$ nicht groß genug bzw. $\Delta t$ nicht klein genug gewählt und der Zustand konnte noch nicht ausreichend konvergieren\footnote{Für $\alpha<0.1,\beta<0.1$ waren aus diesem Grund die Abweichungen so groß, dass sie für eine besser Übersicht aus den Abbildungen \ref{ASEP_density_error_img} und \ref{ASEP_flux_std_img} ausgeschlossen wurden}, oder $D$ ist zu klein um den stationären Zustand genau genug darstellen zu können.\\
-
-In Abbildung \ref{ASEP_error_img} sind für zwei verschiedene maximale Matrixdimensionen die Abweichung der Dichten und des Flusses sowie die relative Streuung des Flusses zu sehen. Zunächst werde der Fall $D=12$ betrachtet. Wie in Abbildung \ref{ASEP_flux_std_img} zu sehen, nimmt die relative Streuung mit sinkendem $\alpha$ und $\beta$ zu, für $\alpha\approx\beta$ bleibt diese allerdings klein.Dieses Verhalten kann verstanden werden, wenn die Konvergeschwindigkeit des ASEP-Modells betrachtet wird. Geht ein Zustand mit mittlerer Gesamt-Teilchenzahl $\tau_{\text{ges},0}=\sum_{i=1}^L\tau_{i,0}$ in einen anderen mit $\tau_{\text{ges},1}\lessgtr\tau_{\text{ges},0}$ über, so muss diese Differenz an Teilchen das System verlassen oder darin eingesetzt werden. Da diese Vorgänge mit der Rate $\beta$ bzw. $\alpha$ auftreten, kann das System schneller in den neuen Zustand gelangen, wenn $\alpha$ und $\beta$ groß sind oder $\tau_{\text{ges},1}\approx\tau_{\text{ges},0}$. Als Anfangszustand wurde $\tau_{i,0}=0.5$ gewählt, weshalb Zustände mit $\tau_{\text{ges},1}\approx 0.5L$ besonders schnell konvergieren. Dies ist für $\alpha\approx\beta$ der Fall.\footnote{Da das System auch aufgefasst werden kann als Löcher, welche sich in die entgegengesetzte Richtung bewegen, mit einer Rate $\beta$ eingesetzt und einer Rate $\alpha$ entfernt werden\cite{ASEP}, muss die Dichteverteilung der Teilchen für $\alpha=\beta$ ident sein zu der Verteilung der Löcher. Diese Sysmmetrie erzwingt $\tau_{\text{ges}}=(L-\tau_{\text{ges}})=0.5L$ }
-
-
- Es ist zu erwarten, dass sich dieses Verhalten auch in den Abweichungen der anderen Größen von den exakten Werten widerspiegelt. Berücksichtigt man, dass diese absolute anstatt relative Fehler sind, kann auch genau das beobachtet werden.
- 
-Aufgrund des Verhaltens des Fehlers in Abhängigkeit von $\alpha$ und $\beta$ kann darauf geschlossen werden, dass für dieses System im Fall $D=12$ der Fehler hauptsächlich durch die Wahl von $t$ bzw. $\delta t$ verursacht wird.\\
-
-
-
-In den Abbildungen \ref{ASEP_density_error:2_img}, \ref{ASEP_flux_error:2_img} und \ref{ASEP_flux_std:2_img} sind dieselben Werte für $D=3$ erneut berechnet worden. Aufgrund der sehr geringen Matrixgröße kann zum Einen damit gerechnet werden, das die Fehler deutlich größer sind, und zum anderen diese eine andere Struktur aufweisen, da die Zeitschritte nicht länger der primär limitierende Faktor sind. Tatsächlich ist zu beobachten, dass der Fehler proportional zu der gemeinsamen Information im System (Abbildung \ref{ASEP_info_img}) ist. Es kann hier also beobachtet werden, dass für Wertepaare $(\alpha,\beta)$ mit einer niedrigen gemeinsamen Information $I_{A:B}$ eine Reduktion der Matrixdimension eine geringere Auswirkung auf den Fehler hat, als für Wertepaare mit einem höheren $I_{A:B}$.
-Auch dies entspricht den Erwartungen, da, wie in Abschnitt \ref{information_entropy} behandelt, die gemeinsame Information direkt mit der benötigten Matrixdimension zusammenhängt. 
-
 
 \begin{figure}
 \centering
@@ -608,19 +591,70 @@ Auch dies entspricht den Erwartungen, da, wie in Abschnitt \ref{information_entr
 \caption{L=10}
 \end{figure}
 
-\todo{Überprüfen, ob Asymmetrie von Richtung der Kompression kommt}
+Es soll im weiteren die Qualität der MPS-Näherung an die exakte Lösung behandelt werden. Da für jedes Wertepaar $(\alpha,\beta)$ $L$ Werte für die Dichte und $L-1$ für den Fluss vorliegen, ist für die kompakte Darstellung des Fehlers ein Maß für die mittlere Abweichung nötig. Dafür wurde für die Dichteverteilung die Funktion
+\begin{equation}
+\text{Err}(\alpha,\beta)=\sqrt{\frac{1}{N}\sum_{i=1}^L (\tau_i-\tau_i^{\text{exakt}})^2}
+\end{equation}
+definiert. Dabei ist $\tau_i$ die simulierte mittlere Besetzungszahl bzw. Dichte am Gitterplatz $i$, während $\tau_i^{\text{exakt}}$ für die analytisch berechnete Dichte steht. Diese Funktion kann als mittlerer Abstand zwischen der exakten und der MPS Lösung verstanden werden.
+
+Da der Fluss durch ein System im stationären Zustand stets konstant sein muss (vgl. \cite{ASEP}), wurden zur Abschätzung des Fehlers im Fluss die Abweichung des Mittelwerts zum exakten Wert sowie die relative Streuung des Flusses betrachtet. Auch wenn der Mittelwert mit dem exakten übereinstimmt, ist der stationäre Zustand nur dann erreicht, wenn die Streuung gegen $0$ geht. Ist dies nicht der Fall, wurde entweder $t$ nicht groß genug bzw. $\Delta t$ nicht klein genug gewählt und der Zustand konnte noch nicht ausreichend konvergieren\footnote{Für $\alpha<0.1,\beta<0.1$ waren aus diesem Grund die Abweichungen so groß, dass sie für eine besser Übersicht aus den Abbildungen \ref{ASEP_density_error_img} und \ref{ASEP_flux_std_img} ausgeschlossen wurden}, oder $D$ ist zu klein, um den stationären Zustand genau genug darstellen zu können.\\
+
+In Abbildung \ref{ASEP_error_img} sind für zwei verschiedene maximale Matrixdimensionen die Abweichung der Dichten und des Flusses sowie die relative Streuung des Flusses zu sehen. Zunächst werde der Fall $D=12$ betrachtet. Wie in Abbildung \ref{ASEP_flux_std_img} zu sehen, nimmt die relative Streuung mit sinkendem $\alpha$ und $\beta$ zu, für $\alpha\approx\beta$ bleibt diese allerdings klein. Dieses Verhalten kann verstanden werden, wenn die Konvergenzgeschwindigkeit des ASEP-Modells betrachtet wird. Geht ein Zustand mit mittlerer Gesamt-Teilchenzahl $\tau_{\text{ges},0}=\sum_{i=1}^L\tau_{i,0}$ in einen anderen mit $\tau_{\text{ges},1}\lessgtr\tau_{\text{ges},0}$ über, so muss diese Differenz an Teilchen das System verlassen oder darin eingesetzt werden. Da diese Vorgänge mit der Rate $\beta$ bzw. $\alpha$ auftreten, kann das System schneller in den neuen Zustand gelangen, wenn $\alpha$ und $\beta$ groß sind oder $\tau_{\text{ges},1}\approx\tau_{\text{ges},0}$. Als Anfangszustand wurde $\tau_{i,0}=0.5$ gewählt, weshalb Zustände mit $\tau_{\text{ges},1}\approx 0.5L$ besonders schnell konvergieren. Dies ist für $\alpha\approx\beta$ der Fall\footnote{Da das System auch aufgefasst werden kann als Löcher, welche sich in die entgegengesetzte Richtung bewegen, die mit einer Rate $\beta$ eingesetzt und einer Rate $\alpha$ entfernt werden \cite{ASEP}, muss die Dichteverteilung der Teilchen für $\alpha=\beta$ ident sein zu der Verteilung der Löcher. Diese Sysmmetrie erzwingt $\tau_{\text{ges}}=(L-\tau_{\text{ges}})=0.5L$.}.
+
+
+ Es ist zu erwarten, dass sich dieses Verhalten auch in den Abweichungen der anderen Größen von den exakten Werten widerspiegelt. Berücksichtigt man, dass diese absolute anstatt relative Fehler sind, kann auch genau das beobachtet werden.
+ 
+Aufgrund des Verhaltens des Fehlers in Abhängigkeit von $\alpha$ und $\beta$ kann darauf geschlossen werden, dass für dieses System im Fall $D=12$ der Fehler hauptsächlich durch die Wahl von $t$ bzw. $\Delta t$ verursacht wird.\\
+
+
+
+Für die Abbildungen \ref{ASEP_density_error:2_img}, \ref{ASEP_flux_error:2_img} und \ref{ASEP_flux_std:2_img} wurden dieselben Werte für $D=3$ erneut berechnet. Aufgrund der sehr geringen Matrixgröße kann zum Einen damit gerechnet werden, dass die Fehler deutlich größer sind und zum anderen eine andere Struktur aufweisen, da die Zeitschritte nicht länger der primär limitierende Faktor sind. Tatsächlich ist in den Abbildungen \ref{ASEP_density_error:2_img} und \ref{ASEP_flux_std:2_img} zu beobachten, dass der Fehler der gemeinsamen Information im System (Abbildung \ref{ASEP_info_img}) ähnelt. 
+
+Der Bogen, an dem der Fehler ein lokales Minimum aufweist rührt daher, dass bei der Kompression des MPS zuerst von der ersten zu letzten Matrix und im Anschluss von der letzten zur ersten vorgegangen wird. Ändert man die Reihenfolge, spiegelt sich dieser Bogen um die Diagonale von $(0,0)$ zu $(1,1)$\\
+
+Da die gemeinsame Information $I_{A:B}$ jedoch keine Größe des gesamten Systems ist, sondern für eine Aufteilung in die Untersysteme $A$ und $B$ definiert ist, sollten auch die Fehler dieser Untersysteme mit $I_{A:B}$ verglichen werden. In Abbildung \ref{ASEP_subsys_img} sind für zwei Fälle die Ergebnisse zu sehen. Während für die linken Abbildungen das System $A$ nur den ersten Gitterplatz einschließt, werden in den rechten Abbildungen alle Gitterplätze bis auf den letzten eingeschlossen. Es wurde weiters die Funktion
+\begin{equation}
+\text{Err}_A(\alpha,\beta)=\sqrt{\frac{1}{\lvert A\rvert}\sum_{i\in A}^L (\tau_i-\tau_i^{\text{exakt}})^2}
+\end{equation}
+eingeführt, um den Fehler in einem Untersystem bestimmen zu können. Zu beachten ist, dass Abbildung \ref{ASEP_subsys_den_1} $\text{Err}_A(\alpha,\beta)$ darstellt, Abbildung \ref{ASEP_subsys_den_2} allerdings $\text{Err}_B(\alpha,\beta)$. In den Abbildungen \ref{ASEP_subsys_flux_1} und \ref{ASEP_subsys_flux_2} ist jeweils die Abweichung des Flusses von System $A$ nach $B$ im Betrag zu sehen. Es ist hierbei ein eindeutiger Zusammenhang zwischen der Fehlern der Untersysteme sowie deren gemeinsamer Information zu erkennen.\\
+
+\begin{figure}
+\centering
+\subfloat[$\text{Err}_A(\alpha,\beta)$]{\includegraphics[width=0.5\textwidth]{Julia/Data/subsys_den_1.png}\label{ASEP_subsys_den_1} }
+\subfloat[$\text{Err}_B(\alpha,\beta)$]{\includegraphics[width=0.5\textwidth]{Julia/Data/subsys_den_10.png}\label{ASEP_subsys_den_2} }\\
+\subfloat[$\langle J\rangle$]{\includegraphics[width=0.5\textwidth]{Julia/Data/subsys_flow_1.png}\label{ASEP_subsys_flux_1} }
+\subfloat[$\langle J\rangle$]{\includegraphics[width=0.5\textwidth]{Julia/Data/subsys_flow_9.png}\label{ASEP_subsys_flux_2} }\\
+\subfloat[$I_{A:B}$]{\includegraphics[width=0.5\textwidth]{Julia/Data/information_1.png} }
+\subfloat[$I_{A:B}$]{\includegraphics[width=0.5\textwidth]{Julia/Data/information_9.png} }\\
+\caption{$\text{Err}(\alpha,\beta)$, $\langle J\rangle$ sowie $I_{A:B}$ für zwei verschiedene Zerlegungen des Systems. Links zu sehen ist die die Werte bei Teilung nach dem ersten Gitterplatz, rechts die bei Teilung vor dem letzten.}
+\label{ASEP_subsys_img}
+\end{figure}
+
+
+
+ Es kann zusammenfassend also beobachtet werden, dass für Wertepaare $(\alpha,\beta)$ mit einer niedrigen gemeinsamen Information $I_{A:B}$ eine Reduktion der Matrixdimension eine geringere Auswirkung auf den Fehler hat, als für Wertepaare mit einem höheren $I_{A:B}$.
+Auch dies entspricht den Erwartungen, da, wie in Abschnitt \ref{information_entropy} behandelt, die gemeinsame Information direkt mit der zur exakten Beschreibung benötigten Matrixdimension zusammenhängt.
+
+
 
 \subsection{sMPS}
 
-Das Vorgehen bei der Verwendung eines sMPS unterscheidet sich in einigen Punkten von dem mit einem MPS. Dies liegt daran, dass bei der NMF auch ohne Kompression der Matrixgröße Fehler der Ordnung $10^{-3}$ auftreten.\footnote{Für zufällige Matrizen der Dimension $(8\times 8)$ ist die maximale Abweichung eines Matrixelements ca. $3*10^{-3}$} Es hat sich daher als sinnvoll erwiesen, $\Delta t\geq 0.2$ zu verwenden um die Anzahl der nötigen Faktorisierungen klein zu halten. Wurde dies nicht gemacht, konnte eine wesentlich schlechtere Konvergenz sowie ein deutlich weniger glatter Verlauf in der Dichteverteilung beobachtet werden. Da die nicht-negative Matrix-Faktorisierung ein nicht-konvexes Optimierungsproblem darstellt, sind die Matrizen, die sich durch eine NMF ergeben, auch nicht determiniert, was die Konvergenz zum stationären Zustand weiters erschwert.\\
+Das Vorgehen bei der Verwendung eines sMPS unterscheidet sich in einigen Punkten von dem mit einem MPS. Dies liegt daran, dass bei der NMF auch ohne Kompression der Matrixgröße Fehler der Ordnung $10^{-3}$ auftreten.\footnote{Für zufällige Matrizen der Dimension $(8\times 8)$ ist die maximale Abweichung eines Matrixelements ca. $3*10^{-3}$} Es hat sich daher als sinnvoll erwiesen, $\Delta t\geq 0.2$ zu verwenden um die Anzahl der nötigen Faktorisierungen klein zu halten. Wurde dies nicht gemacht, konnte eine wesentlich schlechtere Konvergenz sowie ein deutlich weniger glatter Verlauf in der Dichteverteilung beobachtet werden. Da die nicht-negative Matrix-Faktorisierung ein nicht-konvexes Optimierungsproblem darstellt, sind die Matrizen, die sich durch eine NMF ergeben, auch nicht determiniert, was die Konvergenz zum stationären Zustand weiters erschwert. Dies führt unter anderem dazu, dass sich die berechneten Werte nicht so stetig mit $\alpha$ und $\beta$ ändern, wie es im MPS-Fall beobachtet wurde. Es wurde daher ein linearer Gaußfilter (vgl \ref{gaus_filter}) mit einer symmetrischen Standartabweichung von $0.0125$ auf die Bildpunkte angewandt, um die grobe Struktur dieser besser darstellen zu können.\\
 
 Da sich eine NMF um ein vielfaches Zeitaufwendiger als eine SVD erwiesen hat, wurde als Test-System ein Gitter mit $L=6$ verwendet. Die Zeitentwicklung wurde in Schritten $\Delta t=0.3$ bis $t=5L$ und anschließend $\Delta t=0.2$ bis $t=L$ durchgeführt, da für größere Zeiten $t$ keine bessere Konvergenz beobachtet werden konnte.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.5\textwidth]{Julia/Data/L_error_asym.png}
-\caption{Mittlerer Betrag des Fehlers für die Gitterplätze. Die senkrechte Linie markiert das Zentrum der Gitters}\label{L_error_asym}
+\subfloat[Mittels MPS für $L=10$]{\includegraphics[width=0.476\textwidth]{Julia/Data/L_error_sym.png}\label{L_error_sym}}
+\subfloat[Mittles sMPS für $L=6$]{\includegraphics[width=0.45\textwidth]{Julia/Data/L_error_asym.png}\label{L_error_asym}}
+\caption{Mittlerer Betrag des Fehlers für die Gitterplätze. Die senkrechte Linie markiert das Zentrum der Gitters} \label{L_error}
 \end{figure}
+
+
+Da bei der Betrachtung einzelner Wertepaare $(\alpha,\beta)$ beobachtet werden konnte, dass der Fehler der Abweichung für die ersten Gitterplätze tendenziell größer war als für die letzten, wurde dies für überprüft, ob dieses Verhalten bei einer Mittelung über alle Wertepaare weiter auftritt. Dafür wurde der Betrag der Differnez von $\tau_i$ und $\tau_i^{\text{exakt}}$ über alle $\alpha$ und $\beta$ gemittelt. Dabei konnte festgestellt werden, dass diese mittlere Abweichung für die ersten beiden Gitterplätze um $30\%$ größer war als für die beiden letzten. Diese Asymmetrie war bei der Verwendung eines MPS nicht zu beobachten. Die Werte sind in Abbildung \ref{L_error} zu sehen. Der Ursprung dieses Verhaltens kann ein Artefakt der NMF sein. Existiert für eine Matrix die Zerlegung $A=WH$ in elementweise positive Matrizen, so werden $W$ und $H$ von einem NMF-Algorithmus iterativ gesucht.\cite{MPS-vs-sMPS} Ist diese Näherung allerdings für  $W$ im Mittel schlechter als für $H$, wäre die beobachtete Asymmetrie zu erklären.\\
+
+
+Aufgrund dieser Asymmetrie ist zu erwarten, dass die Entropie für die Zerlegung $|p\rangle^{[1]}$ des sMPS zwischen den Plätzen $1$ und $2$ ebenfalls einen größeren Fehler aufweist als die Zerlegung $|p\rangle^{[5]}$ zwischen den Plätzen $5$ und $6$. Dies kann für die Berechnung der Entropie-Kosten $S_C$ eine größere Auswirkung haben als auf die anderen berechneten Größen, da nicht über die Entropie der einzelnen Zerlegungen gemittelt, sondern minimiert wird. In Abbildung \ref{stoc_entropy_full_img} ist $S_C$ minimiert über alle Zerlegungen zu sehen, während in Abbildung \ref{stoc_entropy_img} die Zerlegung zwischen den Plätzen $1$ und $2$ ausgeschlossen wurde. Zweiteres entspricht im Vergleich mit den Ergebnissen aus \cite{sMPS} den Erwartungen. Dies legt den Schluss nahe, dass die Entropie für $|p\rangle^{[1]}$ durch den Fehler signifikant zu niedrig abgeschätzt wird. Vergleicht man nun die Entropie-Kosten aus Abbildung \ref{stoc_entropy_img} mit der maximalen gemeinsamen Information aus Abbildung \ref{ASEP_info_img}, kann festgestellt werden, dass $I_{A:B}$ von oben durch $S_C$ beschränkt ist, was die Ergebnisse aus \cite{sMPS} bestätigt.\\
 
 \begin{figure}
 \centering
@@ -629,27 +663,26 @@ Da sich eine NMF um ein vielfaches Zeitaufwendiger als eine SVD erwiesen hat, wu
 \caption{Entropie-Kosten $S_C$ für ein Gitter mit $L=6$. Im rechten Bild wurde die Zerlegung zwischen ersetem und zweitem Platz ausgeschlossen.}
 \end{figure}
 
-Da bei der Betrachtung einzelner Wertepaare $(\alpha,\beta)$ beobachtet werden konnte, dass der Fehler der Abweichung für die ersten Gitterplätze tendenziell größer war als für die letzten, wurde dies für überprüft, ob dieses Verhalten bei einer Mittelung über alle Wertepaare weiter auftritt. Dafür wurde der Betrag der Abweichung von $\tau_i$ zu $\tau_i^{\text{exakt}}$ über alle $\alpha$ und $\beta$ gemittelt. Dabei konnte festgestellt werden, dass diese mittlere Abweichung für die ersten beiden Gitterplätze um $30\%$ größer war als für die beiden letzten. Die Werte sind in Abbildung \ref{L_err_asym} zu sehen. Es kann außerdem sein, dass es sich hierbei um ein Artefakt der NMF handelt. Existiert für eine Matrix die Zerlegung $A=WH$ in positive Matrizen, so werden $W$ und $H$ von einem NMF-Algorithmus iterativ gesucht.\cite{MPS-vs-sMPS} Ist diese allerdings für  $W$ im Mittel schlechter als für $H$, wäre die beobachtete Asymmetrie zu erklären.\\
+In Abbildung \ref{ASEP_stoc_error_img} sind die Ergebnisse für $D=8$, die volle Matrix-Dimension des sMPS, sowie $D=2$ zu sehen. Es wurde erneut $\text{Err}(\alpha,\beta)$, $\langle J\rangle$ sowie die relative Streuung von $J$ berechnet. Es ist zu sehen, dass die Gerade von (0,0) zu (1,1) nicht länger eine Symmetrieachse darstellt, wie es für einen MPS der Fall war. Betrachtet man in Abbildung \ref{ASEP_stoc_density_error_img}, \ref{ASEP_stoc_flux_error_img} und \ref{ASEP_stoc_flux_std_img} jeweils nur die Hälfte unter dieser Diagonalen ist eine starke Ähnlichkeit zu den Abbildungen \ref{ASEP_density_error_img}, \ref{ASEP_flux_error_img} sowie \ref{ASEP_flux_std_img} erkennen. Besonders für die relative Streuung von $J$ ist allerdings zu beobachten, dass für einzelne Punkte die berechneten Größen weit über bwz. unter denen ihrer nächsten Umgebung liegen. Eine wahrscheinliche Ursache dafür ist in der nicht-Konvexität der NMF zu finden. Da aufgrund dieser die Qualität der Näherung stark von den Anfangsbedingungen abhängt\cite{MPS-vs-sMPS}, sind Unregelmäßigkeiten wie diese zu erwarten.
+Weiters ist in allen Bildern zu sehen, dass für kleine Werte von $\alpha$ der Fehler am größten wird.\\
+
+%Was zur Asymmetrie %Die  Asymmetrie der Genauigkeit in $\alpha$ und $\beta$ zu geben.
 
 
-Aufgrund dieser Asymmetrie ist zu erwarten, dass die Entropie für die Zerlegung $|p\rangle^{[1]}$ des sMPS zwischen den Plätzen $1$ und $2$ ebenfalls einen größeren Fehler aufweist als die Zerlegung $|p\rangle^{[5]}$ zwischen den Plätzen $5$ und $6$. Dies kann für die Berechnung der Entropie-Kosten $S_C$ eine größere Auswirkung haben als auf die anderen berechneten Größen, da nicht über die Entropie der einzelnen Zerlegungen gemittelt, sondern minimiert wird. In Abbildung \ref{stoc_entropy_full_img} ist $S_C$ minimiert über alle Zerlegungen zu sehen, während in Abbildung \ref{stoc_entropy_img} die Zerlegung zwischen den Plätzen $1$ und $2$ ausgeschlossen wurde. Zweiteres entspricht im Vergleich mit den Ergebnissen aus \cite{sMPS} den Erwartungen. Dies legt den Schluss nahe, dass die Entropie für $|p\rangle^{[1]}$ durch den Fehler signifikant zu niedrig abgeschätzt wird.\\
 
-In Abbildung \ref{ASEP_stoc_error_img} sind die Ergebnisse für $D=8$, die volle Matrix-Dimension des sMPS, sowie $D=2$ zu sehen. Es wurde erneut $\text{Err}(\alpha,\beta)$, $\langle J\rangle$ sowie die relative Streuung von $\langle J\rangle$ berechnet.
-
-Stärkere Fluktuationen für großes D-> Indix für schlechte Matrix-Näherung
-
+Betrachtet man nun den Fall $D=2$, so kann man wie für einen MPS eine andere Struktur des Fehlers feststellen. Diese Änderung ist hierbei allerdings deutlich weniger klar, da der hier der Fehler für $D=8$ annähernd dieselbe Größenordnung hat. Es ist also damit zu rechnen, dass die Struktur des Fehlers für $D=2$ der Überlagerung von diesem sowie $S_C$ aus Abbildung \ref{stoc_entropy_img} ähnelt.
+Im Gegensatz zu $D=8$ ist auch zu bemerken, dass die Werte weit weniger Unregelmäßigkeiten aufweisen. Da der durchschnittliche Fehler bei der NMF einer $(2\times 2)$ Matrix um einen Faktor $10$ unter dem einer $(8\times 8)$ Matrix liegt, kann daher auch damit gerechnet werden, dass die Unregelmäßigkeiten um diesen Faktor abnehmen und daher nicht länger sichtbar sind.
 
 
 
 \begin{figure}
 \centering
-\subfloat[$\text{Err}(\alpha,\beta)$ für ($D=12$)]{\includegraphics[width=0.45\textwidth]{Julia/Data/stoc_Err.png}\label{ASEP_stoc_density_error_img}}
-\subfloat[$\text{Err}(\alpha,\beta)$ für ($D=3$)]{\includegraphics[width=0.45\textwidth]{Julia/Data/stoc_Err_D=2.png}\label{ASEP_stoc_density_error:2_img}}\\
-\subfloat[Fehler des Flusses ($D=12$)]{\includegraphics[width=0.5\textwidth]{Julia/Data/stoc_flow_error.png}\label{ASEP_stoc_flux_error_img}}
-\subfloat[Fehler des Flusses ($D=3$)]{\includegraphics[width=0.5\textwidth]{Julia/Data/stoc_flow_error_D=2.png}\label{ASEP_stoc_flux_error:2_img}}\\
-\subfloat[relative Streuung des Flusses ($D=12$)]{\includegraphics[width=0.5\textwidth]{Julia/Data/stoc_flow_std.png}\label{ASEP_stoc_flux_std_img}}
-\subfloat[relative Streuung des Flusses ($D=3$)]{\includegraphics[width=0.5\textwidth]{Julia/Data/stoc_flow_std_D=2.png}\label{ASEP_stoc_flux_std:2_img}}\\
-%\subfloat[Fluss durch Gitter]{\includegraphics[width=0.45\textwidth]{Julia/Data/flow.png}}
+\subfloat[$\text{Err}(\alpha,\beta)$ für ($D=8$)]{\includegraphics[width=0.45\textwidth]{Julia/Data/stoc_Err.png}\label{ASEP_stoc_density_error_img}}
+\subfloat[$\text{Err}(\alpha,\beta)$ für ($D=2$)]{\includegraphics[width=0.45\textwidth]{Julia/Data/stoc_Err_D=2.png}\label{ASEP_stoc_density_error:2_img}}\\
+\subfloat[Fehler des Flusses ($D=8$)]{\includegraphics[width=0.5\textwidth]{Julia/Data/stoc_flow_error.png}\label{ASEP_stoc_flux_error_img}}
+\subfloat[Fehler des Flusses ($D=2$)]{\includegraphics[width=0.5\textwidth]{Julia/Data/stoc_flow_error_D=2.png}\label{ASEP_stoc_flux_error:2_img}}\\
+\subfloat[relative Streuung des Flusses ($D=8$)]{\includegraphics[width=0.5\textwidth]{Julia/Data/stoc_flow_std.png}\label{ASEP_stoc_flux_std_img}}
+\subfloat[relative Streuung des Flusses ($D=2$)]{\includegraphics[width=0.5\textwidth]{Julia/Data/stoc_flow_std_D=2.png}\label{ASEP_stoc_flux_std:2_img}}\\
 
 \label{ASEP_stoc_error_img}
 \caption{L=10}
@@ -657,12 +690,21 @@ Stärkere Fluktuationen für großes D-> Indix für schlechte Matrix-Näherung
 
 \chapter{Fazit}
 
+Wie in Abschnitt \ref{ASEP_MPS} gezeigt wurde, konnte mithilfe von Matrix-Produkt Zuständen das ASEP Modell gut genähert werden. Es konnten anhand der Struktur der Abweichung in Abhängigkeit der Ein- und Ausfluss-Parameter $\alpha$ und $\beta$ Rückschlüsse auf die primäre Ursache des Fehlers gezogen werden. Dabei konnte beobachtet werden, dass der von der Begrenzung der Matrix-Dimension rührende Fehler dieselbe Abhängigkeit von $\alpha$ und $\beta$ aufweist wie die gemeinsame Information $I_{A:B}$.\\
+
+Die Berechnung des ASEP-Modells mittels stochastischen Matrix-Produkt Zuständen konnte ebenfalls implementiert werden. Während dabei die Abweichungen von der analytischen Lösung um einen Faktor $10^2$ größer waren, konnte das prinzipielle Verhalten des Systems reproduziert werden. Die Ursache für diese Abweichungen war der bei der nicht-negativen Matrix-Faktorisierung auftretende Fehler. Die Ergebnisse können verbessert werden, indem bei jeder Verwendung diese Faktorisierung mehrere Iterationen mit verschiedenen Anfangsbedingungen vorgenommen werden, um davon die Matrizen mit dem geringen Fehler auswählen zu können \cite{MPS-vs-sMPS}. Wie bereits in \cite{sMPS} demonstriert wurde, konnte mit den stochastischen MPS eine obere Schranke für die gemeinsame Information gefunden werden.\\
+
+Es konnte insbesondere für die MPS-Näherung, aber auch für die sMPS-Näherung, beobachtet werden, dass die Standartabweichung des mittleren Flusses dieselbe Struktur aufweist wie die Abweichung der Dichteverteilung und des mittleren Flusses. Damit ist es potentiell möglich festzustellen, ob die gewählte Matrixdimension oder die Größe der Zeitschritte die primäre Ursache für eventuelle Abweichungen sind, wenn keine analytische Lösung des Modells verfügbar ist.\\
+
+Zusammenfassend waren Matrix-Produkt Zustände ihrem stochastischem Gegenstück sowohl in der erreichbaren Genauigkeit als auch dem nötigen Rechenaufwand signifikant überlegen. Während überprüft werden konnte, dass ein sMPS grundsätzlich zur Untersuchung des ASEP-Modells geeignet ist, ergaben sich dadurch keine Vorteile. Es scheint demnach ratsam, einen MPS zu verwenden, wenn dies möglich ist.
+
 
 \chapter{Anhang}
-\section{Trotter-Zerlegung}
+\section{Trotter-Zerlegung}\label{trotter}
 
 \section{SVD und NMF}
-\section{Linearer Filter}
+\section{Linearer Filter}\label{gaus_filter}
+
 \bibliographystyle{plain}
 \bibliography{Bibliografie} 
 

@@ -1,11 +1,11 @@
 include("time_evolve.jl")
 using Plots, LaTeXStrings
 
-L=6
-d=8
-t=10.
-Δt=0.3
-iter=3
+L=10
+d=3
+t=100.
+Δt=0.5
+iter=4
 
 α=0.2
 β=0.7
@@ -26,15 +26,15 @@ density_prof=zeros(41,41,L)
 flow_prof=zeros(41,41)
 
 
-for k=1:41
-  for l=1:41
-α=(k-1)/40
-β=(l-1)/40
+for k=1:11
+  for l=1:11
+α=(k-1)/10
+β=(l-1)/10
 h1=[0 0 α 0; 0 -p_right p_left α; 0 p_right -p_left-α 0; 0 0 0 -α]
 h=[0 0 0 0; 0 -p_right p_left 0; 0 p_right -p_left 0; 0 0 0 0]
 hl=[-β 0 0 0; β -p_right p_left 0; 0 p_right -p_left-β 0; 0 0 β 0]
 
-#(h1,h,hl)=(complex(h1),complex(h),complex(hl))
+(h1,h,hl)=(complex(h1),complex(h),complex(hl))
 H=[h1,h,hl];
 Ht=[h1',h',hl']
 
@@ -44,15 +44,15 @@ Ht=[h1',h',hl']
 #density_prof=zeros(L)
 
 for i=1:L
-  #Right[i]=complex(reshape([1/sqrt(2);1/sqrt(2)],(1,1,2))); Left[i]=complex(reshape([1/sqrt(2);1/sqrt(2)],(1,1,2)))
-  Right[i]=reshape([0.5;0.5],(1,1,2))
+  Right[i]=complex(reshape([1/sqrt(2);1/sqrt(2)],(1,1,2))); Left[i]=complex(reshape([1/sqrt(2);1/sqrt(2)],(1,1,2)))
+  #Right[i]=reshape([0.5;0.5],(1,1,2))
   #Left[i]=reshape([0.0;1.0],(1,1,2))
 end
 
 for i=1:iter
   print(i,": ")
   tMPS(Right,H,t,Δt,d)
-  #tMPS(Left,Ht,t,Δt,d)
+  tMPS(Left,Ht,t,Δt,d)
   for j=1:L
     #density[i,j]=overlap(Left,Right,:real,(N,j))[1]/overlap(Left,Right,:real)[1]
     #density[i,j]=stoc_expect_val(Right,(N,j))[1]/stoc_expect_val(Right,(Ident,1))[1]
@@ -62,21 +62,21 @@ for i=1:iter
   end
 end
 
-#tMPS(Right,H,float(L)*3,0.1,d)
-#tMPS(Left,Ht,float(L)*3,0.1,d)
+tMPS(Right,H,float(L)*3,0.1,d)
+tMPS(Left,Ht,float(L)*3,0.1,d)
 #tMPS(Right,H,float(L)*0.25,0.025,d)
 #tMPS(Left,Ht,float(L)*0.25,0.025,d)
-tMPS(Right,H,float(L),0.2,d)
+#tMPS(Right,H,float(L),0.2,d)
 for j=1:L
-  #density[k, l]=overlap(Left,Right,:real,(N,j))[1]/overlap(Left,Right,:real,(Ident,1))[1]
-  density[k,l,j]=stoc_expect_val(Right,(N,j))[1]/stoc_expect_val(Right,(Ident,1))[1]
+  density[k, l, j]=overlap(Left,Right,:real,(N,j))[1]/overlap(Left,Right,:real,(Ident,1))[1]
+  #density[k,l,j]=stoc_expect_val(Right,(N,j))[1]/stoc_expect_val(Right,(Ident,1))[1]
   #density[iter+1,j]=stoc_expect_val(Right,(N,j))[1]/stoc_expect_val(Right,(Ident,1))[1]
   density_prof[k, l,j]=ASEP_density(j,L,α,β)
   if j<L
-    #flow[k,l,j]=overlap(Left,Right,:real,(N,j),(Ident-N,j+1))[1]/overlap(Left,Right,:real,(Ident,1))[1]
-    #ent_entropy_MPS[k,l,:]=entropy(Right)
-    flow[k,l,j]=stoc_expect_val(Right,(N,j),(Ident-N,j+1))[1]/stoc_expect_val(Right,(Ident,1))[1]
-    ent_entropy_MPS[k,l,:]=stoc_entropy(Right)
+    flow[k,l,j]=overlap(Left,Right,:real,(N,j),(Ident-N,j+1))[1]/overlap(Left,Right,:real,(Ident,1))[1]
+    ent_entropy_MPS[k,l,:]=entropy(Right)
+    #flow[k,l,j]=stoc_expect_val(Right,(N,j),(Ident-N,j+1))[1]/stoc_expect_val(Right,(Ident,1))[1]
+    #ent_entropy_MPS[k,l,:]=stoc_entropy(Right)
   end
 end
 #(ent_entropy_MPS[Int64(round((α-0.0)*40))+1, Int64(round((β-0.0)*40))+1],max_ent_entropy_MPS[Int64(round((α-0.0)*40))+1, Int64(round((β-0.0)*40))+1])=entropy(Right)

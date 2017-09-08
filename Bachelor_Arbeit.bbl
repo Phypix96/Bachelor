@@ -7,6 +7,11 @@ B~Derrida, M~R Evans, V~Hakim, and V~Pasquier.
 \newblock {\em Journal of Physics A: Mathematical and General}, 26(7):1493,
   1993.
 
+\bibitem{Area_law}
+J.~Eisert, M.~Cramer, and M.~B. Plenio.
+\newblock Colloquium.
+\newblock {\em Rev. Mod. Phys.}, 82:277--306, Feb 2010.
+
 \bibitem{MPS-vs-sMPS}
 T.~H. Johnson, S.~R. Clark, and D.~Jaksch.
 \newblock Dynamical simulations of classical stochastic systems using matrix
@@ -29,6 +34,12 @@ Ulrich Schollwöck.
 Kristan Temme and Frank Verstraete.
 \newblock Stochastic matrix product states.
 \newblock {\em Phys. Rev. Lett.}, 104:210502, May 2010.
+
+\bibitem{Entropy}
+Jaegon Um, Hyunggyu Park, and Haye Hinrichsen.
+\newblock Entanglement versus mutual information in quantum spin chains.
+\newblock {\em Journal of Statistical Mechanics: Theory and Experiment},
+  2012(10):P10026, 2012.
 
 \bibitem{MPS_error}
 F.~Verstraete and J.~I. Cirac.
